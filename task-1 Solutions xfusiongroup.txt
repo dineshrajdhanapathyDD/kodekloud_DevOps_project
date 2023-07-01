@@ -64,4 +64,3 @@ sh xfusioncorp.sh
 Welcome To KodeKloud
 
 
-source file link: https://www.nbtechsupport.co.in/2021/06/linux-file-permissions.html

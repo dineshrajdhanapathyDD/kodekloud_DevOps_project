@@ -1,6 +1,4 @@
-sources:
-article solution : https://www.nbtechsupport.co.in/2020/12/create-linux-user-with-non-interactive.html
-youtube solution :https://www.youtube.com/watch?v=tbx6vfMhr1I&ab_channel=NBTechSupport
+
 
 Questions:
 The System admin team of xFusionCorp Industries has installed a backup agent tool on all app servers. As per the tool's requirements they need to create a user with a non-interactive shell.
@@ -18,7 +16,8 @@ pasword : Am3ric@
 [steve@stapp02 ~]$ sudo useradd yousuf -s /sbin/nologin
 [steve@stapp02 ~]$ id yousuf
 
-4.  Validate user is created successfully as per the task request.   
+4.  Validate user is created successfully as per the task request.  
+[steve@stapp02 ~]$ id yousuf 
 uid=1002(yousuf) gid=1002(yousuf) groups=1002(yousuf)
 
 [steve@stapp02 ~]$ cat /etc/passwd |grep yousuf
