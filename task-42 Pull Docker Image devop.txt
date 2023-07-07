@@ -24,11 +24,12 @@ steve@stapp02's password: Am3ric@
 2. Run the Below command to check existing docker images 
 [root@stapp02 ~]# docker images
 
+
 3. Run the Below command to  pull the docker image on the server
 [root@stapp02 ~]# docker pull busybox:musl
 
-4. Now retag ( create new tag ) as per the task 
 
+4. Now retag ( create new tag ) as per the task 
 [root@stapp02 ~]# docker image tag busybox:musl  busybox:news
 [root@stapp02 ~]# docker images
 REPOSITORY   TAG       IMAGE ID       CREATED      SIZE
