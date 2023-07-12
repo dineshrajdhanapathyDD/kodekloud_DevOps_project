@@ -1,0 +1,145 @@
+
+
+Questions:
+here are a number of parameters that are used by the applications. We need to define these as environment variables, so that we can use them as needed within different configs. Below is a scenario which needs to be configured on Kubernetes cluster. Please find below more details about the same.
+
+
+
+Create a pod named envars.
+
+Container name should be fieldref-container, use image busybox preferable latest tag, use command 'sh', '-c' and args should be
+
+'while true; do echo -en '/n'; printenv NODE_NAME POD_NAME; printenv POD_IP POD_SERVICE_ACCOUNT; sleep 10; done;'
+
+(Note: please take care of indentations)
+
+Define Four environment variables as mentioned below:
+a.) The first env should be named as NODE_NAME, set valueFrom fieldref and fieldPath should be spec.nodeName.
+
+b.) The second env should be named as POD_NAME, set valueFrom fieldref and fieldPath should be metadata.name.
+
+c.) The third env should be named as POD_IP, set valueFrom fieldref and fieldPath should be status.podIP.
+
+d.) The fourth env should be named as POD_SERVICE_ACCOUNT, set valueFrom fieldref and fieldPath shoulbe be spec.serviceAccountName.
+
+Set restart policy to Never.
+
+To check the output, exec into the pod and use printenv command.
+
+Note: The kubectl utility on jump_host has been configured to work with the kubernetes cluster.
+
+
+
+Solution:  
+
+1.  Create yaml  file with all the parameters , you can copy form gitlab
+
+    https://gitlab.com/nb-tech-support/devops.git
+
+thor@jump_host ~$ vi /tmp/envars.yaml
+ open a new terminal : paste the below command
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: envars
+  spec:
+  restartPolicy: Never
+  containers:
+    - name: fieldref-container
+      image: redis:latest
+      command: ["sh", "-c"]
+      args:
+        - while true; do
+          echo -en '\n';
+          printenv NODE_NAME POD_NAME;
+          printenv POD_IP POD_SERVICE_ACCOUNT;
+          sleep 10;
+          done;
+      env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: POD_SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
+
+exit :wq
+
+thor@jump_host /$ cat /tmp/envars.yml
+
+fresh work :
+2.  Run below command to create pod   
+
+thor@jump_host ~$ kubectl create -f /tmp/envars.yaml
+pod/envars created
+
+3. wait for the pod running status
+
+thor@jump_host ~$ kubectl get pods
+NAME     READY   STATUS    RESTARTS   AGE
+envars   1/1     Running   0          40s
+
+
+4. Validate the task by login on pod and run printenv
+
+
+thor@jump_host ~$ kubectl exec -it envars  -- /bin/bash
+
+root@envars:/data# printenv
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_SERVICE_PORT=443
+HOSTNAME=envars
+REDIS_DOWNLOAD_SHA=9dd83d5b278bb2bf0e39bfeb75c3e8170024edbaf11ba13b7037b2945cf48ab7
+POD_NAME=envars
+PWD=/data
+HOME=/root
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+REDIS_VERSION=7.0.12
+GOSU_VERSION=1.16
+TERM=xterm
+NODE_NAME=kodekloud-control-plane
+REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-7.0.12.tar.gz
+SHLVL=1
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+POD_IP=10.244.0.5
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_PORT=443
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+POD_SERVICE_ACCOUNT=default
+_=/usr/bin/printenv
+
+
+5.  Click on Finish & Confirm to complete the task successful
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+error: error validating "/tmp/envars.yml": error validating data: [ValidationError(Pod.metadata): unknown field "containers" in io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta, ValidationError(Pod.metadata): unknown field "restartPolicy" in io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta]; if you choose to ignore these errors, turn validation off with --validate=false
