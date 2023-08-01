@@ -47,7 +47,7 @@ fd955b76cffb        nginx:alpine        "/docker-entrypoint.…"   About a minut
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 nginx               alpine              4937520ae206        6 weeks ago         41.4MB
 
-4. Run the docker in loaclhost
+4. Run the docker in locallhost
 [root@stapp02 ~]# curl http://localhost:8080
 <!DOCTYPE html>
 <html>
