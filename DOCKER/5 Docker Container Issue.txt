@@ -1,0 +1,48 @@
+
+
+Questions:
+There is a static website running within a container named (nautilus), this container is running on (App Server 1). Suddenly, we started facing some issues with the static website on (App Server 1). Look into the issue to fix the same, you can find more details below:
+
+Container's volume (/usr/local/apache2/htdocs) is mapped with the host's volume (/var/www/html).
+
+The website should run on host port (8080) on (App Server 1) i.e command (curl http://localhost:8080/) should work on (App Server 1).
+
+
+
+thor@jump_host ~$ ssh tony@stapp01
+tony@stapp01's password: Ir0nM@n
+[tony@stapp01 ~]$ sudo su -
+[sudo] password for tony: Ir0nM@n
+
+[root@stapp01 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS                     PORTS               NAMES
+bec8370bdddb        httpd               "httpd-foreground"   6 minutes ago       Exited (0) 6 minutes ago                       nautilus
+
+[root@stapp01 ~]# ls /var/www/html
+index.html
+
+[root@stapp01 ~]# docker -v /usr/local/apache2/htdocs
+Docker version 19.03.15, build 99e3ed8919
+
+
+[root@stapp01 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+httpd               latest              96a2d0570deb        7 days ago          168MB
+[root@stapp01 ~]# docker run -d --volume /usr/local/apache2/htdocs:/tmp 96a2d0570deb sleep infinity
+c2a1067537736678e429a93f73ab05a3036ee197183d8686b0726d4b426582bf
+
+
+[root@stapp01 ~]# docker run -d --volume /usr/local/apache2/htdocs:/var/www/html 96a2d0570deb sleep infinity
+7ee278e99c6e4fd23df5660c9871b3f0071ccab85f49db124bbd32d81e0e83ea
+[root@stapp01 ~]# docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+7ee278e99c6e        96a2d0570deb        "sleep infinity"    15 seconds ago      Up 6 seconds        80/tcp              zen_fermi
+
+
+error happen:
+
+- container 'nautilus' is not running or its configuration was alterted on App Server 1
+FAILED test_container_issues.py::test_container_issues - AssertionError: - co...
+
+
+
