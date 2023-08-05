@@ -44,5 +44,9 @@ error happen:
 - container 'nautilus' is not running or its configuration was alterted on App Server 1
 FAILED test_container_issues.py::test_container_issues - AssertionError: - co...
 
+command line :
+docker run -it --name <WHATEVER> -p <LOCAL_PORT>:<CONTAINER_PORT> -v <LOCAL_PATH>:<CONTAINER_PATH> -d <IMAGE>:<TAG>
+
+docker run -v /host/directory:/container/directory -t IMAGE-NAME /bin/bash
 
 
