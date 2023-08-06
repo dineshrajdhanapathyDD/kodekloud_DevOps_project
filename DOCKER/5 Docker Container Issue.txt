@@ -21,6 +21,9 @@ bec8370bdddb        httpd               "httpd-foreground"   6 minutes ago      
 [root@stapp01 ~]# ls /var/www/html
 index.html
 
+[root@stapp01 ~]# docker container run -d --name nautilus -p 8080:80 httpd:latest 
+
+
 [root@stapp01 ~]# docker -v /usr/local/apache2/htdocs
 Docker version 19.03.15, build 99e3ed8919
 

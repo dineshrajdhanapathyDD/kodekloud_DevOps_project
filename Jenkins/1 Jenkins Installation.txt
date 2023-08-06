@@ -21,6 +21,50 @@ thor@jump_host ~$ ssh root@jenkins
 root@jenkins's password: S3curePass
 
 
+[root@jenkins ~]# cat /etc/*release  //Ubuntu 16.04
+CentOS Stream release 8
+NAME="CentOS Stream"
+VERSION="8"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="8"
+PLATFORM_ID="platform:el8"
+PRETTY_NAME="CentOS Stream 8"
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:centos:centos:8"
+HOME_URL="https://centos.org/"
+BUG_REPORT_URL="https://bugzilla.redhat.com/"
+REDHAT_SUPPORT_PRODUCT="Red Hat Enterprise Linux 8"
+REDHAT_SUPPORT_PRODUCT_VERSION="CentOS Stream"
+CentOS Stream release 8
+CentOS Stream release 8
+cat: //Ubuntu: No such file or directory
+cat: 16.04: No such file or directory
+
+
+
+
+
+# From Jump Server
+ssh root@jenkins      S3curePass
+cat /etc/*release  //Ubuntu 16.04
+
+# Install Java
+apt update
+apt search openjdk
+apt install openjdk-8-dbg
+java -version
+
+# add the key 
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sh -c 'echo deb https://pkg.jenkins.io/debian binary/ > \
+    /etc/apt/sources.list.d/jenkins.list'
+
+apt install apt-transport-https
+apt update
+apt install jenkins
+
+
 
 
 
@@ -29,3 +73,18 @@ error:
 
 - package 'jenkins' is not installed or service 'jenkins' is not running on jenkins server
 ERROR test_jenkins_installation.py - AssertionError: - package 'jenkins' is n...
+
+
+
+[root@jenkins ~]# yum install java
+Failed to set locale, defaulting to C.UTF-8
+Updating Subscription Management repositories.
+Unable to read consumer identity
+
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+
+Last metadata expiration check: 0:20:29 ago on Sat Aug  5 17:53:48 2023.
+Package java-1.8.0-openjdk-1:1.8.0.382.b05-2.el8.x86_64 is already installed.
+Dependencies resolved.
+Nothing to do.
+Complete!
