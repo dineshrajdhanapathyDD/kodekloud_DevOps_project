@@ -8,6 +8,91 @@ Container's volume (/usr/local/apache2/htdocs) is mapped with the host's volume 
 The website should run on host port (8080) on (App Server 1) i.e command (curl http://localhost:8080/) should work on (App Server 1).
 
 
+Solution:  
+
+1. At first login on app server  &  Switch to the root user 
+
+thor@jump_host ~$ ssh tony@stapp01
+tony@stapp01's password: Ir0nM@n
+[tony@stapp01 ~]$ sudo su -
+[sudo] password for tony: Ir0nM@n
+
+
+2. Run the Below command to check existing docker images 
+[root@stapp01 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+httpd               latest              96a2d0570deb        13 days ago         168MB
+
+3. Run the Below command to  pull the docker image on the server
+
+[root@stapp01 ~]# docker pull httpd:latest
+latest: Pulling from library/httpd
+Digest: sha256:d7262c0f29a26349d6af45199b2770d499c74d45cee5c47995a1ebb336093088
+Status: Image is up to date for httpd:latest
+docker.io/library/httpd:latest
+
+
+5. Run docker container from the image with given name and path
+
+[root@stapp01 ~]# docker run -v /var/www/html:/usr/local/apache2/htdocs -d -it  httpd:latest
+1da7bcb8ba732947685a562cae9c9a1a513572113039cac273e457086b8815ed
+
+[root@stapp01 ~]# docker run --name nautilus -v /var/www/html:/usr/local/apache2/htdocs -d -it  httpd:latest
+d6afe709b7871afefc1f522e9c0e21161d61cc973a9cf5f44ff39c5211e9464e
+error:
+docker: Error response from daemon: Conflict. The container name "/nautilus" is already in use by container "53af1735413010d1538c865094d9d9d0d44d5877696235c634e41a40ecb7d89d". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+
+6. Validate the task by login on  docker container and list  /usr/local/apache2/htdocs
+
+[root@stapp01 ~]# docker ps
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS               NAMES
+d6afe709b787        httpd:latest        "httpd-foreground"   32 seconds ago      Up 20 seconds       80/tcp              nautilus
+[root@stapp01 ~]# docker exec -it d6afe709b787  /bin/bash
+root@d6afe709b787:/usr/local/apache2# ls /usr/local/apache2/htdocs
+index.html
+
+
+7.  Click on Finish & Confirm to complete the task successful
+
+
+
+new error:
+- container 'nautilus' is not running or its configuration was alterted on App Server 1
+FAILED test_container_issues.py::test_container_issues - AssertionError: - co...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 thor@jump_host ~$ ssh tony@stapp01
 tony@stapp01's password: Ir0nM@n
