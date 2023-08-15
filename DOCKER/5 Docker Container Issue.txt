@@ -61,8 +61,26 @@ new error:
 - container 'nautilus' is not running or its configuration was alterted on App Server 1
 FAILED test_container_issues.py::test_container_issues - AssertionError: - co...
 
+- container 'nautilus' is not running or its configuration was alterted on App Server 1
+FAILED test_container_issues.py::test_container_issues - AssertionError: - co...
 
 
+[root@stapp01 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+httpd               latest              96a2d0570deb        2 weeks ago         168MB
+[root@stapp01 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS                     PORTS               NAMES
+d476418ccce2        httpd               "httpd-foreground"   3 minutes ago       Exited (0) 3 minutes ago                       nautilus
+[root@stapp01 ~]# docker run -d -v /var/www/html:/usr/local/apache2/htdocs -p 8080:80 --rm httpd:latest
+e95dcf9d4106698019fe6e8f4bb827f4eedbfb5273e824fb819e95c102f05939
+[root@stapp01 ~]# curl http://localhost/index.html
+curl: (7) Failed to connect to localhost port 80: Connection refused
+[root@stapp01 ~]# docker run -d -v /var/www/html:/usr/local/apache2/htdocs -p 80:8080 --rm httpd:latest
+91518ac9fb602f37170e51eeaa6c0c2e08bd1d911f8b39df3471239361bf56ef
+[root@stapp01 ~]# curl http://localhost/index.html
+curl: (56) Recv failure: Connection reset by peer
+[root@stapp01 ~]# curl http://localhost:8080/
+Welcome to xFusionCorp Industries!
 
 
 
