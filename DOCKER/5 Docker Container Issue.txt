@@ -14,46 +14,50 @@ Solution:
 
 thor@jump_host ~$ ssh tony@stapp01
 tony@stapp01's password: Ir0nM@n
-[tony@stapp01 ~]$ sudo su -
-[sudo] password for tony: Ir0nM@n
+
 
 
 2. Run the Below command to check existing docker images 
+
 [root@stapp01 ~]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 httpd               latest              96a2d0570deb        13 days ago         168MB
 
-3. Run the Below command to  pull the docker image on the server
 
-[root@stapp01 ~]# docker pull httpd:latest
-latest: Pulling from library/httpd
-Digest: sha256:d7262c0f29a26349d6af45199b2770d499c74d45cee5c47995a1ebb336093088
-Status: Image is up to date for httpd:latest
-docker.io/library/httpd:latest
+3. Run the below command and see all container
+
+[tony@stapp01 ~]$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS                     PORTS               NAMES
+38053b0253d8        httpd               "httpd-foreground"   2 minutes ago       Exited (0) 2 minutes ago                       nautilus
+[tony@stapp01 ~]$ docker run -d -v /var/www/html:/usr/local/apache2/htdocs -p 80:8080 --rm httpd:latest
+0152b8e44ea41aa9afc3d7d25c6e55b17fe20cd8eb860997b6ac92888e79af57
 
 
-5. Run docker container from the image with given name and path
+4. use the container id or the name nautilus” to restart the webserver
+[tony@stapp01 ~]$ docker restart nautilus
+nautilus
 
-[root@stapp01 ~]# docker run -v /var/www/html:/usr/local/apache2/htdocs -d -it  httpd:latest
-1da7bcb8ba732947685a562cae9c9a1a513572113039cac273e457086b8815ed
+5. run the container with port 
 
-[root@stapp01 ~]# docker run --name nautilus -v /var/www/html:/usr/local/apache2/htdocs -d -it  httpd:latest
-d6afe709b7871afefc1f522e9c0e21161d61cc973a9cf5f44ff39c5211e9464e
-error:
-docker: Error response from daemon: Conflict. The container name "/nautilus" is already in use by container "53af1735413010d1538c865094d9d9d0d44d5877696235c634e41a40ecb7d89d". You have to remove (or rename) that container to be able to reuse that name.
-See 'docker run --help'.
+[tony@stapp01 ~]$ docker run -d -v /var/www/html:/usr/local/apache2/htdocs -p 80:8080 --rm httpd:latest
+7bdf31ded68ffa0058c36a7b6404319fff31999d7a9e52b190fcc5e35d5e1e26
 
-6. Validate the task by login on  docker container and list  /usr/local/apache2/htdocs
-
-[root@stapp01 ~]# docker ps
-CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS               NAMES
-d6afe709b787        httpd:latest        "httpd-foreground"   32 seconds ago      Up 20 seconds       80/tcp              nautilus
-[root@stapp01 ~]# docker exec -it d6afe709b787  /bin/bash
-root@d6afe709b787:/usr/local/apache2# ls /usr/local/apache2/htdocs
-index.html
+6. run the curl command:
+[tony@stapp01 ~]$ curl http://localhost:8080/
+Welcome to xFusionCorp Industries!
 
 
 7.  Click on Finish & Confirm to complete the task successful
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -83,33 +87,7 @@ curl: (56) Recv failure: Connection reset by peer
 Welcome to xFusionCorp Industries!
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+try different command:
 
 
 thor@jump_host ~$ ssh tony@stapp01
