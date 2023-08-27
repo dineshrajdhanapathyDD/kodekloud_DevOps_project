@@ -1,0 +1,291 @@
+
+
+Questions:
+There is a static website running in (Stratos Datacenter). They have already configured the app servers and code is already deployed there. To make it work properly, they need to configure (LBR) server. There are number of options for that, but team has decided to go with (HAproxy). FYI, apache is running on port (3000) on all app servers. Complete this task as per below details.
+
+
+
+a. Install and configure (HAproxy) on (LBR) server using (yum) only and make sure all app servers are added to (HAproxy) load balancer. (HAproxy) must serve on default (http) port (Note: Please do not remove (stats socket /var/lib/haproxy/stats) entry from haproxy default config.).
+
+b. Once done, you can access the website using (StaticApp) button on the top bar.
+
+
+Solution:  
+
+1. At first you need to log in to all the app servers and find the Listen port & need to start the httpd services.
+
+2. Login on App server  ssh tony@stapp01
+
+thor@jump_host ~$ ssh tony@stapp01
+
+tony@stapp01's password:Ir0nM@n
+
+3. Switch to  root user : sudo su -
+
+[tony@stapp01 ~]$ sudo su -
+[sudo] password for tony: Ir0nM@n
+
+
+
+[root@stapp01 ~]# cat /etc/httpd/conf/httpd.conf |grep Listen
+# Listen: Allows you to bind Apache to specific IP addresses and/or
+# Change this to Listen on specific IP addresses as shown below to 
+#Listen 12.34.56.78:80
+Listen 3000
+
+
+4. Enable httpd & start the service
+
+
+[root@stapp01 ~]#  systemctl enable httpd
+Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
+[root@stapp01 ~]# systemctl start httpd && systemctl status httpd
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sun 2023-08-27 11:30:05 UTC; 9min ago
+     Docs: man:httpd.service(8)
+ Main PID: 918 (httpd)
+   Status: "Running, listening on: port 3000"
+    Tasks: 212 (limit: 1340692)
+   Memory: 20.4M
+   CGroup: /docker/70427c94754902f0db51f43b1ea334cea9d2d91dce2968c2ee3441d69e4dfb5e/system.slice/httpd.service
+           ├─918 /usr/sbin/httpd -DFOREGROUND
+           ├─931 /usr/sbin/httpd -DFOREGROUND
+           ├─932 /usr/sbin/httpd -DFOREGROUND
+           ├─933 /usr/sbin/httpd -DFOREGROUND
+           └─934 /usr/sbin/httpd -DFOREGROUND
+
+Aug 27 11:39:43 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Failed to set blkio.weight: No such file or directory
+Aug 27 11:39:43 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Failed to set blkio.bfq.weight: No such file or directory
+Aug 27 11:39:43 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Failed to reset devices.list: Operation not permitted
+Aug 27 11:39:43 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Failed to set invocation ID on control group /docker/70427c9475490>
+Aug 27 11:39:45 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Got notification message from PID 918 (READY=1, STATUS=Running, li>
+Aug 27 11:39:55 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Got notification message from PID 918 (READY=1, STATUS=Running, li>
+Aug 27 11:40:01 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Trying to enqueue job httpd.service/start/replace
+Aug 27 11:40:01 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Installed new job httpd.service/start as 93
+Aug 27 11:40:01 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Enqueued job httpd.service/start as 93
+Aug 27 11:40:01 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Job httpd.service/start finished, result=done
+
+5. Validate Apache HTTPd running  as per the task request
+
+[root@stapp01 ~]# cat /etc/httpd/conf/httpd.conf |grep Listen
+# Listen: Allows you to bind Apache to specific IP addresses and/or
+# Change this to Listen on specific IP addresses as shown below to 
+#Listen 12.34.56.78:80
+Listen 3000
+[root@stapp01 ~]# curl localhost:3000
+Welcome to xFusionCorp Industries!
+
+
+
+
+terminal -1
+Now Login to the the LBR Server and install the haproxy 
+1. At first login on LB server  ssh loki@stlb01
+
+thor@jump_host ~$ ssh loki@stlb01
+loki@stlb01's password:Mischi3f
+
+
+2. Switch to  root user : sudo su -
+
+[loki@stlb01 ~]$ sudo su -
+[sudo] password for loki:Mischi3f
+
+3. install the haproxy : yum -y install haproxy
+
+[root@stlb01 ~]# yum -y install haproxy
+Updating Subscription Management repositories.
+Unable to read consumer identity
+
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+
+Last metadata expiration check: 0:07:27 ago on Sun Aug 27 11:43:25 2023.
+Dependencies resolved.
+===============================================================================================================================================================================================
+ Package                                     Architecture                               Version                                            Repository                                     Size
+===============================================================================================================================================================================================
+Installing:
+ haproxy                                     x86_64                                     1.8.27-5.el8                                       appstream                                     1.4 M
+
+Transaction Summary
+===============================================================================================================================================================================================
+Install  1 Package
+
+Total download size: 1.4 M
+Installed size: 4.2 M
+Downloading Packages:
+haproxy-1.8.27-5.el8.x86_64.rpm                                                                                                                                3.6 MB/s | 1.4 MB     00:00    
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                                                          2.2 MB/s | 1.4 MB     00:00     
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                                                                                       1/1 
+  Running scriptlet: haproxy-1.8.27-5.el8.x86_64                                                                                                                                           1/1 
+  Installing       : haproxy-1.8.27-5.el8.x86_64                                                                                                                                           1/1 
+  Running scriptlet: haproxy-1.8.27-5.el8.x86_64                                                                                                                                           1/1 
+  Verifying        : haproxy-1.8.27-5.el8.x86_64                                                                                                                                           1/1 
+Installed products updated.
+
+Installed:
+  haproxy-1.8.27-5.el8.x86_64                                                                                                                                                                  
+
+Complete!
+
+
+4. Edit the vi /etc/haproxy/haproxy.cfg   file and correct the changes as per below
+[root@stlb01 ~]# cat /etc/haproxy/haproxy.cfg |grep haproxy/stats
+
+[root@stlb01 ~]# vi /etc/haproxy/haproxy.cfg
+[root@stlb01 ~]# cat /etc/haproxy/haproxy.cfg
+#---------------------------------------------------------------------
+# Example configuration for a possible web application.  See the
+# full configuration options online.
+#
+#   https://www.haproxy.org/download/1.8/doc/configuration.txt
+#
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    # to have these messages end up in /var/log/haproxy.log you will
+    # need to:
+    #
+    # 1) configure syslog to accept network log events.  This is done
+    #    by adding the '-r' option to the SYSLOGD_OPTIONS in
+    #    /etc/sysconfig/syslog
+    #
+    # 2) configure local2 events to go to the /var/log/haproxy.log
+    #   file. A line like the following can be added to
+    #   /etc/sysconfig/syslog
+    #
+    #    local2.*                       /var/log/haproxy.log
+    #
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+    # utilize system-wide crypto-policies
+    ssl-default-bind-ciphers PROFILE=SYSTEM
+    ssl-default-server-ciphers PROFILE=SYSTEM
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+#---------------------------------------------------------------------
+# main frontend which proxys to the backends
+#---------------------------------------------------------------------
+frontend main
+    bind *:5000
+    acl url_static       path_beg       -i /static /images /javascript /stylesheets
+    acl url_static       path_end       -i .jpg .gif .png .css .js
+
+    use_backend static          if url_static
+    default_backend             app
+
+#---------------------------------------------------------------------
+# static backend for serving up images, stylesheets and such
+#---------------------------------------------------------------------
+backend static
+    balance     roundrobin
+    server      static 127.0.0.1:4331 check
+
+#---------------------------------------------------------------------
+# round robin balancing between the various backends
+#---------------------------------------------------------------------
+backend app
+    balance     roundrobin
+    server  app1 172.16.238.10:3000 check
+    server  app2 172.16.238.11:3000 check
+    server  app3 172.16.238.12:3000 check
+
+5. Validate the haproxy configuration file by running the below command
+
+[root@stlb01 ~]# haproxy -f /etc/haproxy/haproxy.cfg
+
+6. Enable and start the haproxy service
+
+[root@stlb01 ~]# systemctl enable haproxy
+Created symlink /etc/systemd/system/multi-user.target.wants/haproxy.service → /usr/lib/systemd/system/haproxy.service.
+
+[root@stlb01 ~]# systemctl start haproxy
+
+[root@stlb01 ~]# systemctl status haproxy
+● haproxy.service - HAProxy Load Balancer
+   Loaded: loaded (/usr/lib/systemd/system/haproxy.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sun 2023-08-27 12:06:00 UTC; 17s ago
+  Process: 1138 ExecStartPre=/usr/sbin/haproxy -f $CONFIG -f $CFGDIR -c -q $OPTIONS (code=exited, status=0/SUCCESS)
+ Main PID: 1164 (haproxy)
+    Tasks: 2 (limit: 1340692)
+   Memory: 3.7M
+   CGroup: /docker/a0be5cc5122d22979e4feca7a04bed73ea67f80fd5ea041dc8c87c43fcf03800/system.slice/haproxy.service
+           ├─1164 /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -f /etc/haproxy/conf.d -p /run/haproxy.pid
+           └─1178 /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -f /etc/haproxy/conf.d -p /run/haproxy.pid
+
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1]: haproxy.service: About to execute: /usr/sbin/haproxy -Ws -f $CONFIG -f $CFGDIR -p $PIDFILE $OPTIONS
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1]: haproxy.service: Forked /usr/sbin/haproxy as 1164
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1164]: PR_SET_MM_ARG_START failed, proceeding without: Operation not permitted
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1]: haproxy.service: Changed start-pre -> start
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1164]: haproxy.service: Executing: /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -f /etc/haproxy/conf.d -p /
+run/haproxy.pid
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1]: haproxy.service: Got notification message from PID 1164 (READY=1, MAINPID=1164)
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1]: haproxy.service: Changed start -> running
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1]: haproxy.service: Job haproxy.service/start finished, result=done
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1]: Started HAProxy Load Balancer.
+Aug 27 12:06:00 stlb01.stratos.xfusioncorp.com systemd[1]: haproxy.service: Failed to send unit change signal for haproxy.service: Connection reset by peer
+
+[root@stlb01 ~]# logout
+[loki@stlb01 ~]$ logout
+Connection to stlb01 closed.
+
+
+7. Validate the task  from jump server 
+
+thor@jump_host ~$ curl 172.16.238.10:3000
+Welcome to xFusionCorp Industries!
+
+thor@jump_host ~$ curl 172.16.238.11:3000
+Welcome to xFusionCorp Industries!
+
+thor@jump_host ~$ curl 172.16.238.12:3000
+
+Welcome to xFusionCorp Industries!
+
+
+
+
+error:
+- 'Haproxy' is not configured to use stapp01
+ERROR test_haproxy.py - AssertionError: - 'Haproxy' is not configured to use ...
