@@ -38,6 +38,7 @@ Listen 3000
 
 
 [root@stapp01 ~]#  systemctl enable httpd
+
 Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
 [root@stapp01 ~]# systemctl start httpd && systemctl status httpd
 ● httpd.service - The Apache HTTP Server
