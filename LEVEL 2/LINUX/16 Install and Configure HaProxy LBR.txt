@@ -1,7 +1,7 @@
 
 
 Questions:
-There is a static website running in (Stratos Datacenter). They have already configured the app servers and code is already deployed there. To make it work properly, they need to configure (LBR) server. There are number of options for that, but team has decided to go with (HAproxy). FYI, apache is running on port (3000) on all app servers. Complete this task as per below details.
+There is a static website running in (Stratos Datacenter). They have already configured the app servers and code is already deployed there. To make it work properly, they need to configure (LBR) server. There are number of options for that, but team has decided to go with (HAproxy). FYI, apache is running on port (8082) on all app servers. Complete this task as per below details.
 
 
 
@@ -31,7 +31,7 @@ tony@stapp01's password:Ir0nM@n
 # Listen: Allows you to bind Apache to specific IP addresses and/or
 # Change this to Listen on specific IP addresses as shown below to 
 #Listen 12.34.56.78:80
-Listen 3000
+Listen 8082
 
 
 4. Enable httpd & start the service
@@ -40,7 +40,9 @@ Listen 3000
 [root@stapp01 ~]#  systemctl enable httpd
 
 Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
-[root@stapp01 ~]# systemctl start httpd && systemctl status httpd
+[root@stapp01 ~]# 
+
+
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
    Active: active (running) since Sun 2023-08-27 11:30:05 UTC; 9min ago
@@ -69,11 +71,11 @@ Aug 27 11:40:01 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Job h
 
 5. Validate Apache HTTPd running  as per the task request
 
-[root@stapp01 ~]# cat /etc/httpd/conf/httpd.conf |grep Listen
+[root@stapp01 ~]#  cat /etc/httpd/conf/httpd.conf |grep Listen
 # Listen: Allows you to bind Apache to specific IP addresses and/or
 # Change this to Listen on specific IP addresses as shown below to 
 #Listen 12.34.56.78:80
-Listen 3000
+Listen 8082
 [root@stapp01 ~]# curl localhost:3000
 Welcome to xFusionCorp Industries!
 
