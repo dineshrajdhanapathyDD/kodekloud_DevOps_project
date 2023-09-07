@@ -128,7 +128,7 @@ Login using username (admin) and password (Adm!n321).
 
 manage jenkins-> credentials-> new credentials-> Kind = username with password -> scope= global(jenkins, nodes, item, all child items etc) ->
 
-username : peter
+username : banner
 password - Sp!dy
 id- db_creds
 
