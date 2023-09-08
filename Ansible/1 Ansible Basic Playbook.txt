@@ -30,7 +30,7 @@ stapp01 ansible_host=172.16.238.10 ansible_user=tony ansible_ssh_pass=Ir0nM@n
 
 thor@jump_host ~$ vi /home/thor/ansible/playbook.yml
 open new terminal 
-paste ths command
+paste the command
 
 - name: Create file in appserver
   hosts: stapp01
