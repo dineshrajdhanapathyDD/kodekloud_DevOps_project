@@ -11,7 +11,6 @@ Identify the faulty app host and fix the issue. Make sure Apache service is up a
 Solution:  
 1. At first identify the app server which has issue by running the below commands
 
-
 thor@jump_host ~$ telnet stapp01 3002
 
 thor@jump_host ~$ telnet stapp02 3002
@@ -21,12 +20,12 @@ thor@jump_host ~$ telnet stapp03 3002
 
 2. login on app server which has connection refuse error & switch to root  
 
-
 thor@jump_host ~$ ssh tony@stapp01
 tony@stapp01's password: Ir0nM@n
 [tony@stapp01 ~]$ sudo su -
 
 [sudo] password for tony:  Ir0nM@n
+
 
 3. Run the Below command to check the existing Apache HTTPd service     
 
@@ -51,6 +50,7 @@ tcp        0      0 127.0.0.1:8087          0.0.0.0:*               LISTEN      
 [root@stapp01 ~]# kill 610
 
 [root@stapp01 ~]# ps -ef  |grep sendmail
+
 
 6.  Start the httpd service & check the status.
        

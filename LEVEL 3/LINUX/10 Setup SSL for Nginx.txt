@@ -1,6 +1,8 @@
 
 
-Questions:The system admins team of xFusionCorp Industries needs to deploy a new application on App Server 2 in Stratos Datacenter. They have some pre-requites to get ready that server for application deployment. Prepare the server as per requirements shared below:
+Questions:
+
+The system admins team of xFusionCorp Industries needs to deploy a new application on App Server 2 in Stratos Datacenter. They have some pre-requites to get ready that server for application deployment. Prepare the server as per requirements shared below:
 
 
 
@@ -78,6 +80,7 @@ exit
 [root@stapp02 ~]# cat /usr/share/nginx/html/index.html
 Welcome!
 
+
 6. Start  & check the status of  the Nginx service 
 
 [root@stapp02 ~]# systemctl start nginx
@@ -85,3 +88,4 @@ Welcome!
 [root@stapp02 ~]# systemctl status nginx
 
 
+7. Click on Finish & Confirm to complete the task successful
