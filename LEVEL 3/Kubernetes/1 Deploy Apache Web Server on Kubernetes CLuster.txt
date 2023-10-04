@@ -28,11 +28,11 @@ kube-system              Active   50m
 local-path-storage       Active   50m
 
 2. Create yaml  file with all the parameters , you can copy form gitlab
-    https://gitlab.com/nb-tech-support/devops.git
 
 thor@jump_host ~$ vi /tmp/http.yaml
 
 open new terminal:
+
 apiVersion: v1
 kind: Service
 metadata:
