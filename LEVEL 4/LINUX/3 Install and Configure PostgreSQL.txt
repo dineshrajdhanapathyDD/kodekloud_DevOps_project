@@ -57,7 +57,7 @@ Created symlink from /etc/systemd/system/multi-user.target.wants/postgresql.serv
 
 5.  Now login to the Postgres  & Create user, database, and grant permission
 
-    (refer below video for more details)
+    
 
 
   CREATE USER <user_asper_your task> WITH PASSWORD '<password_asper_your task>';
