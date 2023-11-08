@@ -1,6 +1,6 @@
 
 
-Questions:
+## Questions:
 
 The Nautilus application development team has been working on a project repository (/opt/apps.git). This repo is cloned at (/usr/src/kodekloudrepos) on (storage server) in (Stratos DC). They recently shared the following requirements with DevOps team:
 
@@ -10,8 +10,9 @@ One of the developers is working on (feature) branch and their work is still in 
 Also remember to push your changes once done.
 
 
-Solution:  
-1. At first login on to the storage server  & switch to the root user
+## Solution:  
+
+**1. At first login on to the storage server  & switch to the root user**
 
 thor@jump_host ~$ ssh natasha@ststor01
 The authenticity of host 'ststor01 (172.16.238.15)' can't be established.
@@ -32,7 +33,7 @@ Administrator. It usually boils down to these three things:
 [sudo] password for natasha: Bl@kW
 
 
-2. check repo and go to kodekloudrepos directory: cd /usr/src/kodekloudrepos
+**2. check repo and go to kodekloudrepos directory: cd /usr/src/kodekloudrepos**
 
 [root@ststor01 ~]# cd /usr/src/kodekloudrepos
 [root@ststor01 kodekloudrepos]# ls
@@ -43,18 +44,18 @@ apps
 feature.txt  info.txt
 
 
-3. Rebase from master branch: git rebase master feature
+**3. Rebase from master branch: git rebase master feature**
 
 [root@ststor01 apps]# git rebase master feature
 Successfully rebased and updated refs/heads/feature.
 
 
-4. Set git rebase: git config --global pull.rebase true
+**4. Set git rebase: git config --global pull.rebase true**
 
 [root@ststor01 apps]# git config --global pull.rebase true
 
 
-5. Pull from origin feature branch: git pull origin feature
+**5. Pull from origin feature branch: git pull origin feature**
 
 [root@ststor01 apps]# git pull origin feature
 From /opt/apps
@@ -65,7 +66,7 @@ hint: Disable this message with "git config advice.skippedCherryPicks false"
 Successfully rebased and updated refs/heads/feature.
 
 
-6. Push changes: git push origin feature
+**6. Push changes: git push origin feature**
 
 [root@ststor01 apps]# git push origin feature
 Enumerating objects: 5, done.
@@ -85,4 +86,4 @@ nothing to commit, working tree clean
 [root@ststor01 apps]# 
 
 
-7. Click on Finish & Confirm to complete the task successfully
+**7. Click on `Finish` & `Confirm` to complete the task successfully**
