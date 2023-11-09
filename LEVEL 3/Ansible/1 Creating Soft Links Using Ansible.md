@@ -1,24 +1,26 @@
 
 
-Questions:
+## Questions:
 
 The Nautilus DevOps team is practicing some of the Ansible modules and creating and testing different Ansible playbooks to accomplish tasks. Recently they started testing an Ansible file module to create soft links on all app servers. Below you can find more details about it.
 
-Write a (playbook.yml) under (/home/thor/ansible) directory on (jump host), an (inventory) file is already present under (/home/thor/ansible) directory on (jump host) itself. Using this playbook accomplish below given tasks:
+Write a `playbook.yml` under `/home/thor/ansible` directory on `jump host`, an `inventory` file is already present under `/home/thor/ansible` directory on `jump host` itself. Using this playbook accomplish below given tasks:
 
-1. Create an empty file (/opt/finance/blog.txt) on app server 1; its user owner and group owner should be (tony). Create a (symbolic link) of source path (/opt/finance) to destination (/var/www/html).
+1. Create an empty file `/opt/finance/blog.txt` on app server 1; its user owner and group owner should be `tony`. Create a `symbolic link` of source path `/opt/finance` to destination `/var/www/html`.
 
-2. Create an empty file (/opt/finance/story.txt) on app server 2; its user owner and group owner should be (steve). Create a (symbolic link) of source path (/opt/finance) to destination (/var/www/html).
+2. Create an empty file `/opt/finance/story.txt` on app server 2; its user owner and group owner should be `steve`. Create a `symbolic link` of source path `/opt/finance` to destination `/var/www/html`.
 
-3. Create an empty file (/opt/finance/media.txt) on app server 3; its user owner and group owner should be (banner). Create a (symbolic link) of source path (/opt/finance) to destination (/var/www/html).
+3. Create an empty file `/opt/finance/media.txt` on app server 3; its user owner and group owner should be `banner`. Create a `symbolic link` of source path `/opt/finance` to destination `/var/www/html`.
 
-(Note): Validation will try to run the playbook using command (ansible-playbook -i inventory playbook.yml) so please make sure playbook works this way without passing any extra arguments.
+`Note`: Validation will try to run the playbook using command `ansible-playbook -i inventory playbook.yml` so please make sure playbook works this way without passing any extra arguments.
 
 
 
-Solution:  
-1. At first ansible inventory file is working properly and doesn't have any file exist from jump server to all the app server's
+## Solution: 
 
+**1. At first ansible inventory file is working properly and doesn't have any file exist from jump server to all the app server's**
+
+```
 thor@jump_host ~/ansible$ ansible all -a "ls -ltr /opt/finance" -i inventory
 stapp02 | CHANGED | rc=0 >>
 total 0
@@ -27,10 +29,11 @@ total 0
 stapp03 | CHANGED | rc=0 >>
 total 0
 thor@jump_host ~/ansible$ 
+```
 
+**2.  If you see above output then create playbook file `ansible-playbook -i inventory playbook.yml`**
 
-2.  If you see above output then create playbook file (ansible-playbook -i inventory playbook.yml) 
-
+```
 thor@jump_host ~/ansible$ vi /home/thor/ansible/playbook.yml
 thor@jump_host ~/ansible$ cat /home/thor/ansible/playbook.yml
 - name: Create text files and create soft link
@@ -93,9 +96,11 @@ thor@jump_host ~/ansible$ cat /home/thor/ansible/playbook.yml
 
         state: link
 thor@jump_host ~/ansible$ 
+```
 
+**3. Post file saved , run below command to execute the playbook**
 
- 3.  Post file saved , run below command to execute the playbook
+```
 
 thor@jump_host ~/ansible$ ansible-playbook  -i inventory playbook.yml
 
@@ -132,9 +137,11 @@ stapp02                    : ok=3    changed=2    unreachable=0    failed=0    s
 stapp03                    : ok=3    changed=2    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
 
 thor@jump_host ~/ansible$ 
+```
 
+**4. Validate the task by below command**
 
-4.  Validate the task by below command 
+```
 
 thor@jump_host ~/ansible$ ansible all -a "ls -ltr /opt/finance" -i inventory
 stapp01 | CHANGED | rc=0 >>
@@ -147,6 +154,6 @@ stapp02 | CHANGED | rc=0 >>
 total 0
 -rw-r--r-- 1 steve steve 0 Oct  2 08:08 story.txt
 thor@jump_host ~/ansible$ 
+```
 
-
-5.  Click on Finish & Confirm to complete the task successful
+**5.  Click on `Finish` & `Confirm` to complete the task successful**

@@ -1,35 +1,40 @@
 
 
-Questions:
+## Questions:
 
-There is some data on all app servers in (Stratos DC). The Nautilus development team shared some requirement with the DevOps team to alter some of the data as per recent changes they made. The DevOps team is working to prepare an Ansible playbook to accomplish the same. Below you can find more details about the task.
-
-
-Write a (playbook.yml) under (/home/thor/ansible) on (jump host), an (inventory) is already present under (/home/thor/ansible) directory on (Jump host) itself. Perform below given tasks using this playbook:
+There is some data on all app servers in `Stratos DC`. The Nautilus development team shared some requirement with the DevOps team to alter some of the data as per recent changes they made. The DevOps team is working to prepare an Ansible playbook to accomplish the same. Below you can find more details about the task.
 
 
-1. We have a file (/opt/finance/blog.txt) on app server 1. Using Ansible (replace) module replace string (xFusionCorp) to (Nautilus) in that file.
+Write a `playbook.yml` under `/home/thor/ansible` on `jump host`, an `inventory` is already present under `/home/thor/ansible` directory on `Jump host` itself. Perform below given tasks using this playbook:
 
 
-2. We have a file (/opt/finance/story.txt) on app server 2. Using Ansible(replace) module replace the string (Nautilus) to (KodeKloud) in that file.
+1. We have a file `/opt/finance/blog.txt` on app server 1. Using Ansible `replace` module replace string `xFusionCorp` to `Nautilus` in that file.
 
 
-3. We have a file (/opt/finance/media.txt) on app server 3. Using Ansible (replace) module replace string (KodeKloud) to (xFusionCorp Industries) in that file.
+2. We have a file `/opt/finance/story.txt` on app server 2. Using Ansible`replace` module replace the string `Nautilus` to `KodeKloud` in that file.
 
 
-(Note): Validation will try to run the playbook using command (ansible-playbook -i inventory playbook.yml) so please make sure the playbook works this way without passing any extra arguments.
+3. We have a file `/opt/finance/media.txt` on app server 3. Using Ansible `replace` module replace string `KodeKloud` to `xFusionCorp Industries` in that file.
 
 
-Solution:  
-1. Go through the folder mentioned in task and verified the playbook     
+`Note`: Validation will try to run the playbook using command `ansible-playbook -i inventory playbook.yml` so please make sure the playbook works this way without passing any extra arguments.
+
+
+## Solution:  
+
+**1. Go through the folder mentioned in task and verified the playbook**     
+
+```
 
 thor@jump_host ~$ cd /home/thor/ansible
 thor@jump_host ~/ansible$ ls
 ansible.cfg  inventory
 thor@jump_host ~/ansible$ 
+```
 
+**2.  Create a playbook as per the task**
 
-2.  Create a playbook as per the task
+```
 
 thor@jump_host ~/ansible$ vi playbook.yml
 thor@jump_host ~/ansible$ cat playbook.yml
@@ -77,9 +82,11 @@ thor@jump_host ~/ansible$ cat playbook.yml
 
       when: inventory_hostname == "stapp03"
 thor@jump_host ~/ansible$ 
+```
 
+**3. Post file saved , run below command to execute the playbook**
 
-3.  Post file saved , run below command to execute the playbook
+```
 
 thor@jump_host ~/ansible$ ansible-playbook -i inventory playbook.yml
 
@@ -111,9 +118,11 @@ stapp02                    : ok=2    changed=1    unreachable=0    failed=0    s
 stapp03                    : ok=2    changed=1    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
 
 thor@jump_host ~/ansible$ 
+```
 
+**4. Validate the task by login and cat the file**
 
-4.  Validate the task by login and cat the file
+```
 
 thor@jump_host ~/ansible$ ssh -t tony@stapp01 "cat /opt/finance/blog.txt"
 The authenticity of host 'stapp01 (172.16.238.10)' can't be established.
@@ -124,6 +133,6 @@ tony@stapp01's password:
 Welcome to Nautilus Industries !
 Connection to stapp01 closed.
 thor@jump_host ~/ansible$ 
+```
 
-
-5. Click on Finish & Confirm to complete the task successful
+**5. Click on `Finish` & `Confirm` to complete the task successful**

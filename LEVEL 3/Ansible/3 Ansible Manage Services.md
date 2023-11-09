@@ -1,36 +1,42 @@
 
 
-Questions:
+## Questions:
 
 Developers are looking for dependencies to be installed and run on Nautilus app servers in Stratos DC. They have shared some requirements with the DevOps team. Because we are now managing packages installation and services management using Ansible, some playbooks need to be created and tested. As per details mentioned below please complete the task:
 
 
 
-a. On (jump host) create an Ansible playbook (/home/thor/ansible/playbook.yml) and configure it to install (vsftpd) on all app servers.
+a. On `jump host` create an Ansible playbook `/home/thor/ansible/playbook.yml` and configure it to install `vsftpd` on all app servers.
 
 
-b. After installation make sure to start and enable (vsftpd) service on all app servers.
+b. After installation make sure to start and enable `vsftpd`service on all app servers.
 
 
-c. The inventory (/home/thor/ansible/inventory) is already there on (jump host).
+c. The inventory `/home/thor/ansible/inventory` is already there on `jump host`.
 
 
-d. Make sure user (thor) should be able to run the playbook on (jump host).
+d. Make sure user `thor` should be able to run the playbook on `jump host`.
 
 
-(Note): Validation will try to run playbook using command (ansible-playbook -i inventory playbook.yml) so please make sure playbook works this way, without passing any extra arguments.
+`Note`: Validation will try to run playbook using command `ansible-playbook -i inventory playbook.yml` so please make sure playbook works this way, without passing any extra arguments.
 
 
-Solution:  
-1. Go through the folder mentioned in task and create inventory & playbook files   
+## Solution:  
+
+**1. Go through the folder mentioned in task and create inventory & playbook files**   
+
+```
 
 thor@jump_host ~$ cd /home/thor/ansible/
 thor@jump_host ~/ansible$ ls
 inventory
 thor@jump_host ~/ansible$ 
+```
 
+**2.  Create a playbook file as per the task**
 
-2.  Create a playbook file as per the task
+```
+
 thor@jump_host ~/ansible$ vi playbook.yml
 thor@jump_host ~/ansible$ cat playbook.yml
 - name: Install and configure httpd
@@ -48,9 +54,11 @@ thor@jump_host ~/ansible$ cat playbook.yml
         enabled: yes
         state: started
 thor@jump_host ~/ansible$ 
+```
 
+**3. Run the playbook**
 
-3. Run the playbook
+```
 
 thor@jump_host ~/ansible$ ansible-playbook -i inventory playbook.yml
 
@@ -77,9 +85,11 @@ stapp02                    : ok=3    changed=2    unreachable=0    failed=0    s
 stapp03                    : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
 thor@jump_host ~/ansible$ 
+```
 
+**4.To verify, run the following**
 
-4.To verify, run the following
+```
 
 thor@jump_host ~/ansible$ ansible all -i inventory -a "rpm -q vsftpd"
 stapp01 | CHANGED | rc=0 >>
@@ -89,9 +99,11 @@ vsftpd-3.0.3-36.el8.x86_64
 stapp02 | CHANGED | rc=0 >>
 vsftpd-3.0.3-36.el8.x86_64
 thor@jump_host ~/ansible$ 
+```
 
+**5. Status of vsftpd**
 
-5. Status of vsftpd
+```
 
 thor@jump_host ~/ansible$ ansible all -i inventory -a "sudo systemctl status vsftpd"
 stapp03 | CHANGED | rc=0 >>
@@ -176,6 +188,6 @@ stapp01 | CHANGED | rc=0 >>
 stapp02 | CHANGED | rc=0 >>
 
 thor@jump_host ~/ansible$ 
+```
 
-
-6. Click on Finish & Confirm to complete the task successful
+**6. Click on `Finish` & `Confirm` to complete the task successful**
