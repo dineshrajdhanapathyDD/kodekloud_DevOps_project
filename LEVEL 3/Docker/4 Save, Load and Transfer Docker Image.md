@@ -1,24 +1,28 @@
 
 
-Questions:
+## Questions:
 
-One of the DevOps team members was working on to create a new custom docker image on (App Server 1) in (Stratos DC). He is done with his changes and image is saved on same server with name (official:devops). Recently a requirement has been raised by a team to use that image for testing, but the team wants to test the same on (App Server 3). So we need to provide them that image on (App Server 3) in (Stratos DC).
-
-
-a. On (App Server 1) save the image (official:devops) in an archive.
+One of the DevOps team members was working on to create a new custom docker image on `App Server 1` in `Stratos DC`. He is done with his changes and image is saved on same server with name `official:devops`. Recently a requirement has been raised by a team to use that image for testing, but the team wants to test the same on `App Server 3`. So we need to provide them that image on `App Server 3` in `Stratos DC`.
 
 
-b. Transfer the image archive to (App Server 3).
+a. On `App Server 1` save the image `official:devops` in an archive.
 
 
-c. Load that image archive on (App Server 3) with same name and tag which was used on (App Server 1).
+b. Transfer the image archive to `App Server 3`.
 
 
-(Note): Docker is already installed on both servers; however, if its service is down please make sure to start it.
+c. Load that image archive on `App Server 3` with same name and tag which was used on `App Server 1`.
 
 
-Solution:  
-1. Login on   App server as per the task
+`Note`: Docker is already installed on both servers; however, if its service is down please make sure to start it.
+
+
+## Solution:
+
+
+**1. Login on  App server as per the task**
+
+```
 
 thor@jump_host ~$ ssh tony@stapp01
 The authenticity of host 'stapp01 (172.16.238.10)' can't be established.
@@ -38,26 +42,32 @@ Administrator. It usually boils down to these three things:
 
 [sudo] password for tony: Ir0nM@n
 [root@stapp01 ~]# 
+```
 
+**2. List the existing images in docker which need to archive**
 
-2. List the existing images in docker which need to archive
+```
 
 [root@stapp01 ~]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 official            devops              740ab14c41e7        4 minutes ago       122MB
 ubuntu              latest              c6b84b685f35        6 weeks ago         77.8MB
+```
 
+**3. save the image official:devops in an archive**
 
-3. save the image official:devops in an archive 
+```
 
 [root@stapp01 ~]# docker save -o /tmp/official.tar official:devops
 [root@stapp01 ~]# 
 
 root@stapp01 ~]# ls /tmp/
 docker_container.sh  ks-script-kzk1nzfd  ks-script-l36mq90h  official.tar
+```
 
+**4. Copy the tar file on Stapp03 app server**
 
-4. Copy the tar file on Stapp03 app server
+```
 
 [root@stapp01 ~]# scp /tmp/official.tar banner@stapp03:/tmp
 The authenticity of host 'stapp03 (172.16.238.12)' can't be established.
@@ -66,9 +76,11 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 Warning: Permanently added 'stapp03,172.16.238.12' (ECDSA) to the list of known hosts.
 banner@stapp03's password: BigGr33n
 official.tar                                                                              100%  119MB  99.9MB/s   00:01 
+```
 
+**5. Login on  Stapp03 app server & switch to root user**
 
-5. Login on  Stapp03 app server & switch to root user
+```
 
 [root@stapp01 ~]# ssh banner@stapp03
 banner@stapp03's password: BigGr33n
@@ -83,15 +95,19 @@ Administrator. It usually boils down to these three things:
 
 [sudo] password for banner: BigGr33n
 [root@stapp03 ~]# 
+```
 
+**6. Go to tmp folder and confirm the tar file copied successfully**
 
-6. Go to tmp folder and confirm the tar file copied successfully 
+```
 
 [root@stapp03 tmp]# ls /tmp/
 ks-script-kzk1nzfd  ks-script-l36mq90h  official.tar
+```
 
+**7. Start Docker service if its not active**
 
-7. Start Docker service if its not active
+```
 
 [root@stapp03 tmp]# systemctl start docker
 [root@stapp03 tmp]# systemctl status docker
@@ -115,21 +131,25 @@ Sep 29 12:26:10 stapp03.stratos.xfusioncorp.com systemd[1]: docker.service: Tryi
 Sep 29 12:26:10 stapp03.stratos.xfusioncorp.com systemd[1]: docker.service: Installed new job docker.service/start as 99
 Sep 29 12:26:10 stapp03.stratos.xfusioncorp.com systemd[1]: docker.service: Enqueued job docker.service/start as 99
 Sep 29 12:26:10 stapp03.stratos.xfusioncorp.com systemd[1]: docker.service: Job docker.service/start finished, result=done
+```
 
+**8. Load that image archive**
 
-8. Load that image archive 
+```
 
 [root@stapp03 tmp]# docker load -i official.tar
 dc0585a4b8b7: Loading layer [==================================================>]  80.35MB/80.35MB
 bb26dd7e408a: Loading layer [==================================================>]  44.17MB/44.17MB
 Loaded image: official:devops
+```
 
+**9. Validate the task by docker images**
 
-9. Validate the task by docker images
+```
 
 [root@stapp03 tmp]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 official            devops              740ab14c41e7        17 minutes ago      122MB
+```
 
-
-10. Click on Finish & Confirm to complete the task successful
+**10. Click on `Finish` & `Confirm` to complete the task successful**

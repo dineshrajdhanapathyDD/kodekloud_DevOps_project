@@ -1,24 +1,25 @@
 
 
-Questions:
+## Questions:
 
-The Nautilus application development team shared static website content that needs to be hosted on the (httpd) web server using a containerised platform. The team has shared details with the DevOps team, and we need to set up an environment according to those guidelines. Below are the details:
+The Nautilus application development team shared static website content that needs to be hosted on the `httpd` web server using a containerised platform. The team has shared details with the DevOps team, and we need to set up an environment according to those guidelines. Below are the details:
 
-a. On (App Server 3) in (Stratos DC) create a container named (httpd) using a docker compose file (/opt/docker/docker-compose.yml) (please use the exact name for file).
+a. On `App Server 3` in `Stratos DC` create a container named `httpd` using a docker compose file `/opt/docker/docker-compose.yml` (please use the exact name for file).
 
-b. Use (httpd) (preferably (latest) tag) image for container and make sure container is named as (httpd); you can use any name for service.
+b. Use `httpd` (preferably `latest` tag) image for container and make sure container is named as `httpd`; you can use any name for service.
 
-c. Map (80) number port of container with port (3002) of docker host.
-
-
-d. Map container's (/usr/local/apache2/htdocs) volume with (/opt/finance) volume of docker host which is already there. (please do not modify any data within these locations).
+c. Map `80` number port of container with port `3002` of docker host.
 
 
+d. Map container's `/usr/local/apache2/htdocs` volume with `/opt/finance` volume of docker host which is already there. (please do not modify any data within these locations).
 
-Solution:
 
-1. Login to the app server 1 and switch to root.
 
+## Solution:
+
+**1. Login to the app server 1 and switch to root.**
+
+```
 
 [root@stapp01 ~]# ssh banner@stapp03
 banner@stapp03's password: BigGr33n
@@ -33,9 +34,11 @@ We trust you have received the usual lecture from the local System Administrator
 
 [sudo] password for banner: BigGr33n
 [root@stapp03 ~]# 
+```
 
+**2. Proceed to the specified directory and create the docker-compose.yml based on the requirements.**
 
-2. Proceed to the specified directory and create the docker-compose.yml based on the requirements.
+```
 
 [root@stapp03 ~]# cd /opt/docker
 
@@ -51,9 +54,11 @@ services:
     volumes:
       - /opt/finance:/usr/local/apache2/htdocs
 [root@stapp03 docker]# 
+```
 
+**3. Start the container and verify.**
 
-3. Start the container and verify.
+```
 
 [root@stapp03 docker]# docker-compose up -d
 Creating network "docker_default" with the default driver
@@ -74,9 +79,11 @@ Creating httpd ... done
 CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS                  NAMES
 c9f4b5fd09d3        httpd:latest        "httpd-foreground"   38 seconds ago      Up 31 seconds       0.0.0.0:3002->80/tcp   httpd
 [root@stapp03 docker]# 
+```
 
+**4. We can try to curl the localhost via port 3002.**
 
-4. We can try to curl the localhost via port 3002.
+```
 
 [root@stapp03 docker]# curl -I http://localhost:3002
 HTTP/1.1 200 OK
@@ -96,7 +103,7 @@ Content-Type: text/html;charset=ISO-8859-1
 </ul>
 </body></html>
 [root@stapp03 docker]# 
+```
 
-
-5. Click on Finish & Confirm to complete the task successful
+**5. Click on `Finish` & `Confirm` to complete the task successful**
 

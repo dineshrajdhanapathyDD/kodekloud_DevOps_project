@@ -1,24 +1,25 @@
 
 
-Questions:
+## Questions:
 
-The Nautilus DevOps team is planning to host an application on a nginx-based container. There are number of tickets already been created for similar tasks. One of the tickets has been assigned to set up a nginx container on (Application Server 3) in (Stratos Datacenter). Please perform the task as per details mentioned below:
-
-
-a. Pull (nginx:alpine-perl) docker image on (Application Server 3).
+The Nautilus DevOps team is planning to host an application on a nginx-based container. There are number of tickets already been created for similar tasks. One of the tickets has been assigned to set up a nginx container on `Application Server 3` in `Stratos Datacenter`. Please perform the task as per details mentioned below:
 
 
-b. Create a container named (news) using the image you pulled.
+a. Pull `nginx:alpine-perl` docker image on `Application Server 3`.
 
 
-c. Map host port (3002) to container port (80). Please keep the container in running state.
+b. Create a container named `news` using the image you pulled.
 
 
-Solution:  
+c. Map host port `3002` to container port `80`. Please keep the container in running state.
 
 
-  1. At first login on app server  ssh banner@stapp03
+## Solution:  
 
+
+**1. At first login on app server  ssh banner@stapp03**
+
+```
 
 thor@jump_host ~$ ssh banner@stapp03
 The authenticity of host 'stapp03 (172.16.238.12)' can't be established.
@@ -36,15 +37,19 @@ Administrator. It usually boils down to these three things:
     #3) With great power comes great responsibility.
 
 [sudo] password for banner: BigGr33n
+```
 
+**2. Run Below command to check existing docker images** 
 
-3. Run Below command to check existing docker images 
+```
 
 [root@stapp03 ~]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+```
 
+**3.  Pull Docker image  on server** 
 
-4.  Pull Docker image  on server  
+```
 
 [root@stapp03 ~]# docker pull nginx:alpine-perl
 alpine-perl: Pulling from library/nginx
@@ -60,22 +65,28 @@ e92e38a9a0eb: Pull complete
 Digest: sha256:7c2df7ec59565a04aee121a358dd8ac25ca5ce111ada9e11723b27ca114fc6fb
 Status: Downloaded newer image for nginx:alpine-perl
 docker.io/library/nginx:alpine-perl
+```
 
+**4. Verify the pull image**
 
-5. Verify the pull image
+```
 
 [root@stapp03 ~]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 nginx               alpine-perl         da842610a485        4 weeks ago         78MB
+```
 
+**5. Run below command to run container**
 
-6. Run below command to run container
+```
 
 [root@stapp03 ~]# docker container run -d --name news -p 3002:80 nginx:alpine-perl
 38c4574aaca8dcd85949a0715aa3d50cc62ac9ea955f181c6a15f08896e33b20
+```
 
+**6. Validate the task by below command and curl** 
 
-7. Validate the task by below command and curl 
+```
 
 [root@stapp03 ~]# docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
@@ -104,6 +115,6 @@ Commercial support is available at
 <p><em>Thank you for using nginx.</em></p>
 </body>
 </html>
+```
 
-
-8.  Click on Finish & Confirm to complete the task successful
+**7.  Click on `Finish` & `Confirm` to complete the task successful**

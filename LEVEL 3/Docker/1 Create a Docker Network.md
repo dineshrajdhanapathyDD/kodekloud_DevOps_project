@@ -1,21 +1,23 @@
 
 
-Questions:
+## Questions:
 
 The Nautilus DevOps team needs to set up several docker environments for different applications. One of the team members has been assigned a ticket where he has been asked to create some docker networks to be used later. Complete the task based on the following ticket description:
 
 
-a. Create a docker network named as (blog) on App Server (3) in (Stratos DC).
+a. Create a docker network named as `blog` on App Server 3 in `Stratos DC`.
 
-b. Configure it to use (bridge) drivers.
+b. Configure it to use `bridge` drivers.
 
-c. Set it to use subnet (172.168.0.0/24) and iprange (172.168.0.3/24).
+c. Set it to use subnet `172.168.0.0/24` and iprange `172.168.0.3/24`.
 
 
 
-Solution:   
+## Solution:   
 
-1. Login on app server  as per the task  &  Switch to  root user
+**1. Login on app server  as per the task  &  Switch to  root user**
+
+```
 
 thor@jump_host ~$ ssh banner@stapp03
 The authenticity of host 'stapp03 (172.16.238.12)' can't be established.
@@ -34,24 +36,30 @@ Administrator. It usually boils down to these three things:
 
 [sudo] password for banner: BigGr33n
 [root@stapp03 ~]# 
+```
 
+**2. Check existing network on server**
 
-2. Check existing network on server
+```
 
 [root@stapp03 ~]# docker network ls
 NETWORK ID          NAME                DRIVER              SCOPE
 06eb8353433a        bridge              bridge              local
 2facff946852        host                host                local
 daf4ba5e867d        none                null                local
+```
 
+**3. Create a docker network as per the task use network name subnet  & IPrange**
 
-3. Create a docker network as per the task use network name subnet  & IPrange
+```
 
 [root@stapp03 ~]# docker network create -d bridge --subnet=172.168.0.0/24 --ip-range=172.168.0.3/24 blog
 1bbc29ceea3c5312faac954552a4098808ef700193dbb03213b43fb7818b1b7b
+```
 
+**4. Validate the task network has been created successfully** 
 
-4. Validate the task network has been created successfully 
+```
 
 [root@stapp03 ~]# docker network ls
 NETWORK ID          NAME                DRIVER              SCOPE
@@ -93,6 +101,6 @@ daf4ba5e867d        none                null                local
     }
 ]
 [root@stapp03 ~]# 
+```
 
-
-5.  Click on Finish & Confirm to complete the task successful
+**5.  Click on `Finish` & `Confirm` to complete the task successful**
