@@ -1,16 +1,19 @@
 
 
-Questions:
+## Questions:
 
-The Nautilus application development team was working on a git repository (/usr/src/kodekloudrepos/news) present on (Storage server) in (Stratos DC). This was just a test repository and one of the developers just pushed a couple of changes for testing, but now they want to clean this repository along with the commit history/work tree, so they want to point back the (HEAD) and the branch itself to a commit with message (add data.txt file). Find below more details:
+The Nautilus application development team was working on a git repository `/usr/src/kodekloudrepos/news` present on `Storage server` in `Stratos DC`. This was just a test repository and one of the developers just pushed a couple of changes for testing, but now they want to clean this repository along with the commit history/work tree, so they want to point back the (HEAD) and the branch itself to a commit with message `add data.txt file`. Find below more details:
 
-In (/usr/src/kodekloudrepos/news) git repository, reset the git commit history so that there are only two commits in the commit history i.e (initial commit) and (add data.txt file).
+In `/usr/src/kodekloudrepos/news` git repository, reset the git commit history so that there are only two commits in the commit history i.e `initial commit` and `add data.txt file`.
 
 Also make sure to push your changes.
 
 
-Solution:  
-1. At first login on to the storage server  & switch to the root user
+## Solution:  
+
+**1. At first login on to the storage server  & switch to the root user**
+
+```
 
 thor@jump_host ~$ ssh natasha@ststor01
 The authenticity of host 'ststor01 (172.16.238.15)' can't be established.
@@ -29,14 +32,19 @@ Administrator. It usually boils down to these three things:
     #3) With great power comes great responsibility.
 
 [sudo] password for natasha: Bl@kW
+[root@ststor01 ~]#
+```
 
+**2. Check repo on cd**   
 
-2. Check repo on cd   
+```
 
 [root@ststor01 ~]# cd /usr/src/kodekloudrepos/news
+```
 
+**3. check the log**
 
-3. check the log
+```
 
 [root@ststor01 news]# git log
 commit fe18b59cbed23e6aa69e8a5be0663cb9f1c293c1 (HEAD -> master, origin/master)
@@ -112,10 +120,12 @@ Date:   Fri Sep 22 20:52:34 2023 +0000
     initial commit
 
 [1]+  Stopped                 git log
+```
 
 
+**4. Create the reset hard for data.txt file**
 
-4. Create the reset hard for data.txt file
+```
 
 [root@ststor01 news]# git reset --hard d9bdf915163027619d1835883858452af8a41f7b
 HEAD is now at d9bdf91 add data.txt file
@@ -133,15 +143,19 @@ Author: Admin <admin@kodekloud.com>
 Date:   Sat Sep 23 18:36:42 2023 +0000
 
     initial commit
+```
 
+**5. check git branch**
 
-5. check git branch
+```
 
 [root@ststor01 news]# git branch
 * master
+```
 
+**6. check the git configuration**
 
-6. check the git configuration
+```
 
 [root@ststor01 news]# git config --list
 user.email=admin@kodekloud.com
@@ -154,22 +168,29 @@ remote.origin.url=/opt/news.git
 remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
 branch.master.remote=origin
 branch.master.merge=refs/heads/master
+```
 
-7. create the git push force 
+**7. create the git push force**
+
+```
  
 [root@ststor01 news]# git push -f
 Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
 To /opt/news.git
  + 892c445...d9bdf91 master -> master (forced update)
+```
 
+**8. Git push to the branch as well master**
 
-8. Git push to the branch as well master 
+```
 
 [root@ststor01 news]# git push -u origin master 
 Everything has upto date
+```
 
+**9. check the git status**
 
-9. check the git status
+```
 
 [root@ststor01 news]# git status
 On branch master
@@ -177,6 +198,7 @@ Your branch is up to date with 'origin/master'.
 
 nothing to commit, working tree clean
 
+```
 
-10. Click on Finish & Confirm to complete the task successfully
+**10. Click on `Finish` & `Confirm` to complete the task successfully**
 
