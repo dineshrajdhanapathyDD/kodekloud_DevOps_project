@@ -1,86 +1,90 @@
 
 
-Questions:
+## Questions:
 
 The Nautilus DevOps team want to deploy a static website on Kubernetes cluster. They are going to use Nginx, phpfpm and MySQL for the database. The team had already gathered the requirements and now they want to make this website live. Below you can find more details:
 
 
 
-1. Create some secrets for MySQL.
+1. Create some secrets for `MySQL`.
 
-Create a secret named (mysql-root-pass) wih key/value pairs as below:
+Create a secret named `mysql-root-pass` wih key/value pairs as below:
 
-name: password
-value: R00t
-
-
-
-Create a secret named (mysql-user-pass) with key/value pairs as below:
-
-name: username
-value: kodekloud_cap
-
-name: password
-value: Rc5C9EyvbU
+- name: password
+- value: R00t
 
 
 
-Create a secret named (mysql-db-url) with key/value pairs as below:
+Create a secret named `mysql-user-pass` with key/value pairs as below:
 
-name: database
-value: kodekloud_db6
+- name: username
+- value: kodekloud_cap
 
-
-
-Create a secret named (mysql-host) with key/value pairs as below:
-
-name: host
-value: mysql-service
+- name: password
+- value: Rc5C9EyvbU
 
 
 
-2. Create a config map (php-config) for (php.ini) with (variables_order = "EGPCS") data.
+Create a secret named `mysql-db-url` with key/value pairs as below:
 
-3. Create a deployment named (lemp-wp).
+- name: database
+- value: kodekloud_db6
 
 
-4. Create two containers under it. First container must be (nginx-php-container) using image (webdevops/php-nginx:alpine-3-php7) and second container must be (mysql-container) from image (mysql:5.6). Mount (php-config) configmap in nginx container at (/opt/docker/etc/php/php.ini) location.
+
+Create a secret named `mysql-host` with key/value pairs as below:
+
+- name: host
+- value: mysql-service
+
+
+
+2. Create a config map `php-config` for `php.ini` with `variables_order = "EGPCS"` data.
+
+3. Create a deployment named `lemp-wp`.
+
+
+4. Create two containers under it. First container must be `nginx-php-container` using image `webdevops/php-nginx:alpine-3-php7` and second container must be `mysql-container` from image `mysql:5.6`. Mount `php-config` configmap in nginx container at `/opt/docker/etc/php/php.ini` location.
 
 
 5) Add some environment variables for both containers:
 
 
-(MYSQL_ROOT_PASSWORD), (MYSQL_DATABASE), (MYSQL_USER), (MYSQL_PASSWORD) and (MYSQL_HOST). Take their values from the secrets you created. Please make sure to use env field (do not use envFrom) to define the name-value pair of environment variables.
+`MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD` and `MYSQL_HOST`. Take their values from the secrets you created. Please make sure to use env field `do not use envFrom` to define the name-value pair of environment variables.
 
-6) Create a node port type service (lemp-service) to expose the web application, nodePort must be (30008).
-
-
-7) Create a service for mysql named (mysql-service) and its port must be (3306).
+6) Create a node port type service `lemp-service` to expose the web application, nodePort must be `30008`.
 
 
-We already have a (/tmp/index.php) file on (jump_host) server.
+7) Create a service for mysql named `mysql-service` and its port must be `3306`.
 
 
-Copy this file into the (nginx) container under document root i.e (/app) and replace the dummy values for mysql related variables with the environment variables you have set for mysql related parameters. Please make sure you do not hard code the mysql related details in this file, you must use the environment variables to fetch those values.
+We already have a `/tmp/index.php` file on `jump_host` server.
 
 
-Once done, you must be able to access this (website) using Website button on the top bar, please note that you should see (Connected successfully) message while accessing this page.
+Copy this file into the `nginx` container under document root i.e `/app` and replace the dummy values for mysql related variables with the environment variables you have set for mysql related parameters. Please make sure you do not hard code the mysql related details in this file, you must use the environment variables to fetch those values.
 
 
-(Note): The (kubectl) on (jump_host) has been configured to work with the kubernetes cluster.
+Once done, you must be able to access this `website` using Website button on the top bar, please note that you should see `Connected successfully` message while accessing this page.
 
 
-Solutions:
+`Note`: The `kubectl` on `jump_host` has been configured to work with the kubernetes cluster.
 
-1. First, check any running resources.
+
+## Solutions:
+
+**1. First, check any running resources.**
+
+```
 
 thor@jump_host ~$ kubectl get all
 NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   40m
 thor@jump_host ~$ 
+```
 
+**2. Create the secrets.**
 
-2. Create the secrets.
+```
 
 thor@jump_host ~$ kubectl create secret generic mysql-root-pass --from-literal=password=R00t
 secret/mysql-root-pass created
@@ -91,9 +95,11 @@ secret/mysql-db-url created
 thor@jump_host ~$ kubectl create secret generic mysql-host --from-literal=host=mysql-service
 secret/mysql-host created
 thor@jump_host ~$ 
+```
 
+**3. Create the deploy.yml.**
 
-3. Create the deploy.yml.
+```
 
 thor@jump_host ~$ vi /tmp/deploy.yml
 thor@jump_host ~$ cat /tmp/deploy.yml
@@ -212,9 +218,11 @@ spec:
     - port: 3306
   selector:
     app: lemp-wp  
+```
 
+**4. Apply depoly.yml**
 
-4. Apply depoly.yml
+```
 
 thor@jump_host ~$ kubectl apply -f deploy.yml
 configmap/php-config created
@@ -222,16 +230,21 @@ deployment.apps/lemp-wp created
 service/lemp-service created
 service/mysql-service created
 thor@jump_host ~$ 
+```
 
+**5. Running status of pods**
 
-5. Running status of pods
+```
+
 thor@jump_host ~$ kubectl get pods
 NAME                      READY   STATUS    RESTARTS   AGE
 lemp-wp-ff9bff9db-hlmt9   2/2     Running   0          2m20s
 thor@jump_host ~$ 
+```
 
+**6. For easier troubleshooting, we can save the pod name and container names.**
 
-6. For easier troubleshooting, we can save the pod name and container names.
+```
 
 thor@jump_host ~$ NGINX=$(kubectl get pod  -o=jsonpath='{.items[*].spec.containers[0].name}') ; echo "NGINX: $NGINX"
 NGINX: nginx-php-container
@@ -242,9 +255,11 @@ thor@jump_host ~$
 thor@jump_host ~$ POD=$(kubectl get pods -o=jsonpath='{.items[*].metadata.name}'); echo "POD: $POD"
 POD: lemp-wp-ff9bff9db-x5bjm
 thor@jump_host ~$ 
+```
 
+**7. Check the resources.**
 
-7. Check the resources.
+```
 
 thor@jump_host ~$ k get all
 NAME                          READY   STATUS    RESTARTS   AGE
@@ -260,10 +275,11 @@ deployment.apps/lemp-wp   1/1     1            1           19m
 
 NAME                                DESIRED   CURRENT   READY   AGE
 replicaset.apps/lemp-wp-ff9bff9db   1         1         1       19m
+```
 
+**8. Next, edit the index.php based on the instructions.**
 
-8. Next, edit the index.php based on the instructions.
-
+```
 
 thor@jump_host ~$ vi /tmp/index.php
 thor@jump_host ~$ cat /tmp/index.php
@@ -281,14 +297,17 @@ if ($result->connect_error) {
    die("Connection failed: " . $conn->connect_error);
 }
   echo "Connected successfully";
+```
 
-
-9. Copy the file onto the /app directory in the NGINX container.
+**9. Copy the file onto the /app directory in the NGINX container.**
  
+```
 thor@jump_host ~$ kubectl cp /tmp/index.php $POD:/app -c $NGINX 
+```
 
+**10. Verify if the file was copied by opening a shell to the container.**
 
-10. Verify if the file was copied by opening a shell to the container.
+```
 
 thor@jump_host ~$ kubectl exec -it $POD -c $NGINX -- ls -la /app
 total 12
@@ -313,14 +332,14 @@ if ($result->connect_error) {
 }
   echo "Connected successfully";
 thor@jump_host ~$ 
+```
 
-
-11. Finally, click the Website button at the upper right to open the app URL on a new tab.
+**11. Finally, click the Website button at the upper right to open the app URL on a new tab.**
 
 -> Connnected successfully
 
 
-12. Click on Finish & Confirm to complete the task successful
+**12. Click on `Finish` & `Confirm` to complete the task successful**
 
 
 

@@ -1,6 +1,6 @@
 
 
-Questions:
+## Questions:
 here are a number of parameters that are used by the applications. We need to define these as environment variables, so that we can use them as needed within different configs. Below is a scenario which needs to be configured on Kubernetes cluster. Please find below more details about the same.
 
 
@@ -8,19 +8,19 @@ here are a number of parameters that are used by the applications. We need to de
 
 2. Container name should be fieldref-container, use image busybox preferable latest tag, use command 'sh', '-c' and args should be
 
-'while true; do echo -en '/n'; printenv NODE_NAME POD_NAME; printenv POD_IP POD_SERVICE_ACCOUNT; sleep 10; done;'
+'while true; do echo -en '/n'; printenv `NODE_NAME POD_NAME`; printenv `POD_IP POD_SERVICE_ACCOUNT`; sleep 10; done;'
 
-(Note: please take care of indentations)
+`Note: please take care of indentations`
 
 3. Define Four environment variables as mentioned below:
 
-a.) The first env should be named as NODE_NAME, set valueFrom fieldref and fieldPath should be spec.nodeName.
+a.) The first env should be named as `NODE_NAME`, set valueFrom fieldref and fieldPath should be spec.nodeName.
 
-b.) The second env should be named as POD_NAME, set valueFrom fieldref and fieldPath should be metadata.name.
+b.) The second env should be named as `POD_NAME`, set valueFrom fieldref and fieldPath should be metadata.name.
 
-c.) The third env should be named as POD_IP, set valueFrom fieldref and fieldPath should be status.podIP.
+c.) The third env should be named as `POD_IP`, set valueFrom fieldref and fieldPath should be status.podIP.
 
-d.) The fourth env should be named as POD_SERVICE_ACCOUNT, set valueFrom fieldref and fieldPath shoulbe be spec.serviceAccountName.
+d.) The fourth env should be named as `POD_SERVICE_ACCOUNT`, set valueFrom fieldref and fieldPath shoulbe be spec.serviceAccountName.
 
 4. Set restart policy to Never.
 
@@ -30,9 +30,11 @@ Note: The kubectl utility on jump_host has been configured to work with the kube
 
 
 
-Solution:  
+## Solution:  
 
-1.  Create yaml  file with all the parameters , you can copy form gitlab
+**1.  Create yaml  file with all the parameters , you can copy form gitlab**
+
+```
 
 thor@jump_host ~$ vi /tmp/envars.yaml
  
@@ -72,22 +74,28 @@ metadata:
           valueFrom:
             fieldRef:
               fieldPath: spec.serviceAccountName
+```
 
+**2.  Run below command to create pod**
 
-2.  Run below command to create pod   
+```
 
 thor@jump_host ~$ kubectl create -f /tmp/envars.yaml
 pod/envars created
+```
 
+**3. wait for the pod running status**
 
-3. wait for the pod running status
+```
 
 thor@jump_host ~$ kubectl get pods
 NAME     READY   STATUS    RESTARTS   AGE
 envars   1/1     Running   0          40s
+```
 
+**4. Validate the task by login on pod and run printenv**
 
-4. Validate the task by login on pod and run printenv
+```
 
 thor@jump_host ~$ kubectl exec -it envars  -- /bin/bash
 
@@ -115,6 +123,6 @@ KUBERNETES_PORT_443_TCP_PORT=443
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 POD_SERVICE_ACCOUNT=default
 _=/usr/bin/printenv
+```
 
-
-5.  Click on Finish & Confirm to complete the task successful
+**5.  Click on `Finish` & `Confirm` to complete the task successful**

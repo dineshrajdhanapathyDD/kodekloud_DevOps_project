@@ -1,26 +1,31 @@
 
 
-Questions:
+## Questions:
 
-One of the Nautilus DevOps team members was working on to update an existing Kubernetes template. Somehow, he made some mistakes in the template and it is failing while applying. We need to fix this as soon as possible, so take a look into it and make sure you are able to apply it without any issues. Also, do not remove any component from the template like pods/deployments/volumes etc.
-
-
-(/home/thor/mysql_deployment.yml) is the template that needs to be fixed.
+One of the Nautilus DevOps team members was working on to update an existing Kubernetes template. Somehow, he made some mistakes in the template and it is failing while applying. We need to fix this as soon as possible, so take a look into it and make sure you are able to apply it without any issues. Also, do not remove any component from the template like `pods/deployments/volumes` etc.
 
 
-(Note): The (kubectl) utility on (jump_host) has been configured to work with the kubernetes cluster.
+`/home/thor/mysql_deployment.yml` is the template that needs to be fixed.
 
 
-Solution:  
-1. Check existing running Pods  & Services 
+`Note`: The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
+
+
+## Solution:
+
+**1. Check existing running Pods  & Services** 
+
+```
 
 thor@jump_host ~$ kubectl get all
 NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   31m
 thor@jump_host ~$ 
+```
 
+**2. Secrets is by default created in lab**
 
-2. Secrets is by default created in lab 
+```
 
 thor@jump_host ~$ kubectl get secrets
 NAME              TYPE     DATA   AGE
@@ -28,9 +33,11 @@ mysql-db-url      Opaque   1      3m21s
 mysql-root-pass   Opaque   1      3m21s
 mysql-user-pass   Opaque   2      3m21s
 thor@jump_host ~$ 
+```
 
+**3. To identify the issue in template , split in to each kind and troubleshoot further** 
 
-3. To identify the issue in template , split in to each kind and troubleshoot further 
+```
 
 thor@jump_host ~$  cp mysql_deployment.yml pv.yml
 thor@jump_host ~$  cp mysql_deployment.yml pvc.yml
@@ -40,11 +47,13 @@ thor@jump_host ~$ cp mysql_deployment.yml deploy.yml
 thor@jump_host ~$ ls
 deploy.yml  mysql_deployment.yml  pv.yml  pvc.yml  service.yml
 thor@jump_host ~$ 
+```
 
+**4. Create a YAML  file with all the parameters,**
 
-4. Create a YAML  file with all the parameters,
+- a) Lets fixed for pv, delete the lines of rest other kind - PersistentVolumeClaim in vi editor 
 
-a) Lets fixed for pv, delete the lines of rest other kind - PersistentVolumeClaim in vi editor 
+```
 
 thor@jump_host ~$ vi pv.yml
 thor@jump_host ~$ cat pv.yml
@@ -72,9 +81,11 @@ persistentvolume/mysql-pv created
 thor@jump_host ~$ kubectl get pv
 NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
 mysql-pv   250Mi      RWO            Retain           Available           standard                49s
+```
 
+- b) Lets fixed for pvc, delete the lines of rest other kind- PersistentVolumeClaim  in vi editor  
 
-b) Lets fixed for pvc, delete the lines of rest other kind- PersistentVolumeClaim  in vi editor  
+```
 
 thor@jump_host ~$ vi pvc.yml
 thor@jump_host ~$ cat pvc.yml
@@ -101,9 +112,11 @@ thor@jump_host ~$ kubectl get pvc
 NAME             STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 mysql-pv-claim   Pending                                      standard       68s
 thor@jump_host ~$ 
+```
 
+- c) Lets fixed for service, delete the lines of rest other kind- Service   in vi editor  
 
-c) Lets fixed for service, delete the lines of rest other kind- Service   in vi editor  
+```
 
 thor@jump_host ~$ vi service.yml
 thor@jump_host ~$ cat service.yml
@@ -133,9 +146,11 @@ NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
 kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP          53m
 mysql        NodePort    10.96.167.35   <none>        3306:30011/TCP   40s
 thor@jump_host ~$ 
+```
 
+- d) Lets fixed for service, delete the lines of rest other kind- Deployment in vi editor  
 
-d) Lets fixed for service, delete the lines of rest other kind- Deployment in vi editor  
+```
 
 thor@jump_host ~$ vi deploy.yml
 thor@jump_host ~$ cat deploy.yml
@@ -200,9 +215,11 @@ thor@jump_host ~$ kubectl get deploy
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 mysql-deployment   1/1     1            1           42s
 thor@jump_host ~$ 
+```
 
+- e) Wait for deployment & pod ready and running status
 
-e) Wait for deployment & pod ready and running status
+```
 
 thor@jump_host ~$ kubectl get all
 NAME                                   READY   STATUS    RESTARTS   AGE
@@ -256,9 +273,11 @@ NAME                                         DESIRED   CURRENT   READY   AGE
 replicaset.apps/mysql-deployment-944888cd8   1         1         1       4m20s
 
 we have fixed all the kind issue by spliting the existing deployment templates
+```
 
+- f) To proceed further, we need to used same template single deployment file. so lets delete the existing deployment, service, pvc, & pv
 
-f) To proceed further, we need to used same template single deployment file. so lets delete the existing deployment, service, pvc, & pv
+```
 
 thor@jump_host ~$ kubectl delete deploy mysql-deployment
 deployment.apps "mysql-deployment" deleted
@@ -294,9 +313,11 @@ NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   66m
 
 we have deleted all the splited deployment
+```
 
+- g) Clear the data from template mysql_deployment yaml file in vi editor
 
-g) Clear the data from template mysql_deployment yaml file in vi editor
+```
 
 thor@jump_host ~$ vi mysql_deployment.yml
 thor@jump_host ~$ cat mysql_deployment.yml
@@ -421,9 +442,11 @@ persistentvolume/mysql-pv created
 persistentvolumeclaim/mysql-pv-claim created
 service/mysql created
 deployment.apps/mysql-deployment created
-
+```
  
-h) All kinds should get deployed in one go
+- h) All kinds should get deployed in one go
+
+```
 
 thor@jump_host ~$ kubectl get all
 NAME                                   READY   STATUS    RESTARTS   AGE
@@ -462,6 +485,6 @@ deployment.apps/mysql-deployment   1/1     1            1           76s
 NAME                                         DESIRED   CURRENT   READY   AGE
 replicaset.apps/mysql-deployment-944888cd8   1         1         1       76s
 thor@jump_host ~$ 
+```
 
-
-5. Click on Finish & Confirm to complete the task successfully
+**5. Click on `Finish` & `Confirm` to complete the task successfully**
