@@ -1,50 +1,55 @@
 
 
-Questions:
+## Questions:
 
-The Nautilus DevOps team wants to install and set up a simple (httpd) web server on all app servers in (Stratos DC). Additionally, they want to deploy a sample web page for now using Ansible only. Therefore, write the required playbook to complete this task. Find more details about the task below.
-
-
-
-We already have an (inventory) file under (/home/thor/ansible) directory on (jump host). Create a (playbook.yml) under (/home/thor/ansible) directory on (jump host) itself.
+The Nautilus DevOps team wants to install and set up a simple `httpd` web server on all app servers in `Stratos DC`. Additionally, they want to deploy a sample web page for now using Ansible only. Therefore, write the required playbook to complete this task. Find more details about the task below.
 
 
-Using the playbook, install (httpd) web server on all app servers. Additionally, make sure its service should up and running.
+
+We already have an `inventory` file under `/home/thor/ansible` directory on `jump host`. Create a `playbook.yml` under `/home/thor/ansible` directory on `jump host` itself.
 
 
-Using (blockinfile) Ansible module add some content in (/var/www/html/index.html) file. Below is the content:
+Using the playbook, install `httpd` web server on all app servers. Additionally, make sure its service should up and running.
 
 
-(Welcome to XfusionCorp!)
-
-(This is Nautilus sample file, created using Ansible!)
-
-(Please do not modify this file manually!)
+Using `blockinfile` Ansible module add some content in `/var/www/html/index.html` file. Below is the content:
 
 
-The (/var/www/html/index.html) file's user and group (owner) should be (apache) on all app servers.
+`Welcome to XfusionCorp!`
+
+- This is Nautilus sample file, created using Ansible!
+
+`Please do not modify this file manually!`
 
 
-The (/var/www/html/index.html) file's permissions should be (0777) on all app servers.
+The `/var/www/html/index.html` file's user and group `owner` should be `apache` on all app servers.
 
 
-(Note):
-
-i. Validation will try to run the playbook using command (ansible-playbook -i inventory playbook.yml) so please make sure the playbook works this way without passing any extra arguments.
+The `/var/www/html/index.html` file's permissions should be `0777` on all app servers.
 
 
-ii. Do not use any custom or empty (marker) for (blockinfile) module.
+`Note`:
+
+i. Validation will try to run the playbook using command `ansible-playbook -i inventory playbook.yml` so please make sure the playbook works this way without passing any extra arguments.
 
 
-Solution:  
-1. Go through the folder mentioned in task and create inventory & playbook files    
+ii. Do not use any custom or empty `marker` for `blockinfile` module.
+
+
+## Solution:  
+
+**1. Go through the folder mentioned in task and create inventory & playbook files**    
+
+```
 
 thor@jump_host ~$ cd /home/thor/ansible/
 thor@jump_host ~/ansible$ ls
 ansible.cfg  inventory
+```
 
+**2. Create a playbook file   as per the task**
 
-2. Create a playbook file   as per the task
+```
 
 thor@jump_host ~/ansible$ vi playbook.yml
 thor@jump_host ~/ansible$ cat playbook.yml
@@ -93,9 +98,11 @@ thor@jump_host ~/ansible$ cat playbook.yml
          group: apache
 
          mode: "0777"
+```
 
+**3. Post file saved , run below command to execute the playbook**
 
-3. Post file saved , run below command to execute the playbook
+```
 
 thor@jump_host ~/ansible$ ansible-playbook -i inventory playbook.yml
 
@@ -125,9 +132,11 @@ PLAY RECAP *********************************************************************
 stapp01                    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 stapp02                    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 stapp03                    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
 
+**4. validate the task by curl on app server and check**  
 
-4. validate the task by curl on app server and check  
+```
 
 thor@jump_host ~/ansible$ ansible all -a 'ls -l /var/www/html/' -i inventory
 stapp03 | CHANGED | rc=0 >>
@@ -172,6 +181,6 @@ This is Nautilus sample file, created using Ansible!
 
 Please do not modify this file manually!
 # END ANSIBLE MANAGED BLOCK
+```
 
-
-5. Click on Finish & Confirm to complete the task successful.
+**5. Click on `Finish` & `Confirm` to complete the task successful.**
