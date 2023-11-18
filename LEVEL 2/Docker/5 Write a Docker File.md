@@ -1,18 +1,20 @@
 
 
-Questions:
+## Questions:
 
-As per recent requirements shared by the Nautilus application development team, they need custom images created for one of their projects. Several of the initial testing requirements are already been shared with DevOps team. Therefore, create a docker file (/opt/docker/Dockerfile) (please keep (D) capital of Dockerfile) on (App server 1) in (Stratos DC) and configure to build an image with the following requirements:
+As per recent requirements shared by the Nautilus application development team, they need custom images created for one of their projects. Several of the initial testing requirements are already been shared with DevOps team. Therefore, create a docker file `/opt/docker/Dockerfile` `please keep (D) capital of Dockerfile` on `App server 1` in `Stratos DC` and configure to build an image with the following requirements:
 
-a. Use (ubuntu) as the base image.
+a. Use `ubuntu` as the base image.
 
-b. Install (apache2) and configure it to work on (5001) port. (do not update any other Apache configuration settings like document root etc).
-
-
-Solution:  
+b. Install `apache2` and configure it to work on `5001` port. `do not update any other Apache configuration settings like document root etc`.
 
 
- 1. At first login on app server as per the task - app server -1& switch to root user
+## Solution:  
+
+
+**1. At first login on app server as per the task - app server -1& switch to root user**
+
+```
 
 thor@jump_host ~$ ssh tony@stapp01
 The authenticity of host 'stapp01 (172.16.238.10)' can't be established.
@@ -30,17 +32,21 @@ Administrator. It usually boils down to these three things:
     #3) With great power comes great responsibility.
 
 [sudo] password for tony: Ir0nM@n
+```
 
+**2. Run the Below command to check existing docker images**
 
-2. Run the Below command to check existing docker images 
+```
 
 [root@stapp01 ~]# docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 [root@stapp01 ~]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+```
 
+**3. Write a  Vi Dockerfile  in folder /opt/docker**
 
-3. Write a  Vi Dockerfile  in folder /opt/docker
+```
 
 [root@stapp01 ~]# vi /opt/docker/Dockerfile
 [root@stapp01 ~]# cat /opt/docker/Dockerfile
@@ -57,9 +63,11 @@ RUN sed -i "s/80/5001/g" /etc/apache2/ports.conf
 EXPOSE 5001
 
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND", "-k", "start"]
+```
 
+**4. Run Build command to  create an image**
 
-4. Run Build command to  create an image
+```
 
 root@stapp01 ~]# cd /opt/docker/
 [root@stapp01 docker]# docker build  -t apache2 .
@@ -89,15 +97,18 @@ Removing intermediate container 59d239b9da86
  ---> e900b758d4e3
 Successfully built e900b758d4e3
 Successfully tagged apache2:latest
+```
 
+**5. Run the Below command to  run the docker container on the server**
 
-5. Run the Below command to  run the docker container on the server
-
+```
 [root@stapp01 docker]# docker run --name http -p 5001:5001 -d apache2
 32329399b32a0f954685cb8bebf53fba6886277e6ffe7cc5a8ad3fca4f587e63
+```
 
+**6.  Validate the task by docker ps  &   curl**
 
-6.  Validate the task by docker ps  &   curl 
+```
 
 [root@stapp01 docker]# docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
@@ -114,8 +125,8 @@ Accept-Ranges: bytes
 Content-Length: 10671
 Vary: Accept-Encoding
 Content-Type: text/html
+```
 
-
-7.  Click on Finish & Confirm to complete the task successfully
+**7.  Click on `Finish` & `Confirm` to complete the task successfully**
 
 

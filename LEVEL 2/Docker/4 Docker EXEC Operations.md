@@ -1,23 +1,26 @@
 
 
-Questions:
-One of the Nautilus DevOps team members was working to configure services on a (kkloud) container that is running on (App Server 3) in (Stratos Datacenter). Due to some personal work he is on PTO for the rest of the week, but we need to finish his pending work ASAP. Please complete the remaining work as per details given below:
+## Questions:
+
+One of the Nautilus DevOps team members was working to configure services on a `kkloud` container that is running on `App Server 3` in `Stratos Datacenter`. Due to some personal work he is on PTO for the rest of the week, but we need to finish his pending work ASAP. Please complete the remaining work as per details given below:
 
 
-a. Install (apache2) in (kkloud) container using (apt) that is running on (App Server 3) in (Stratos Datacenter).
+a. Install `apache2` in `kkloud` container using `apt` that is running on `App Server 3` in `Stratos Datacenter`.
 
 
-b. Configure Apache to listen on port (6200) instead of default (http) port. Do not bind it to listen on specific IP or hostname only, i.e it should listen on localhost, 127.0.0.1, container ip, etc.
+b. Configure Apache to listen on port `6200` instead of default `http` port. Do not bind it to listen on specific IP or hostname only, i.e it should listen on localhost, 127.0.0.1, container ip, etc.
 
 
 c. Make sure Apache service is up and running inside the container. Keep the container in running state at the end.
 
 
 
-Solution:  
+## Solution:  
 
 
- 1. At first login on app server as per the task -app server 3 &  switch to root user 
+**1. At first login on app server as per the task -app server 3 &  switch to root user**
+
+```
 
 thor@jump_host ~$ ssh banner@stapp03
 The authenticity of host 'stapp03 (172.16.238.12)' can't be established.
@@ -35,17 +38,20 @@ Administrator. It usually boils down to these three things:
     #3) With great power comes great responsibility.
 
 [sudo] password for banner: BigGr33n
+```
 
+**2. Run the Below command to check the existing docker container running**
 
-2. Run the Below command to check the existing docker container running 
+```
 
 [root@stapp03 ~]# docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 5aff0c8150ba        ubuntu:18.04        "/bin/bash"         4 minutes ago       Up 4 minutes                            kkloud
+```
 
+**3. Login on docker container `ubuntu` & install apache2**
 
-3. Login on docker container (ubuntu ) & install apache2
-
+```
 [root@stapp03 ~]# docker exec -it kkloud /bin/sh
 
 # apt install apache2 -y
@@ -230,9 +236,11 @@ Enabling site 000-default.
 invoke-rc.d: could not determine current runlevel
 invoke-rc.d: policy-rc.d denied execution of start.
 Processing triggers for libc-bin (2.27-3ubuntu1.6) ...
+```
 
+**4.Go to the apache2 folder where all configuration files you will find**
 
-4.Go to the apache2 folder where all configuration files you will find 
+```
 
 # cd /etc/apache2
 # ls -l
@@ -247,27 +255,31 @@ drwxr-xr-x 2 root root  4096 Sep 12 10:05 mods-enabled
 -rw-r--r-- 1 root root   320 Feb 23  2021 ports.conf
 drwxr-xr-x 2 root root  4096 Sep 12 10:05 sites-available
 drwxr-xr-x 2 root root  4096 Sep 12 10:05 sites-enabled
+```
 
+**5. Since in this Container no Vi editor was installed, hence using sed commands.**
 
-5. Since in this Container no Vi editor was installed, hence using sed commands.
-
-If you want you cant install vi editor and edit the below config
+- If you want you cant install vi editor and edit the below config
 
 # sed -i 's/Listen 80/Listen 6200/g' ports.conf                                                                        
 # sed -i 's/:80/:6200/g' apache2.conf
 # sed -i 's/#ServerName www.example.com/ServerName localhost/g' apache2.conf
 
 
-6. Start apache2 service & confirm the running status 
+**6. Start apache2 service & confirm the running status**
+
+```
 
 # service apache2 start
  * Starting Apache httpd web server apache2                                                                                                                                                   AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.2. Set the 'ServerName' directive globally to suppress this message
  * 
 # service apache2 status
  * apache2 is running
+```
 
+**7. Validate the task by Curl**
 
-7. Validate the task by Curl
+```
 
 # curl -Ik localhost:6200
 HTTP/1.1 200 OK
@@ -279,6 +291,6 @@ Accept-Ranges: bytes
 Content-Length: 10918
 Vary: Accept-Encoding
 Content-Type: text/html
+```
 
-
-8.  Click on Finish & Confirm to complete the task successfully.
+**8.  Click on `Finish` & `Confirm` to complete the task successfully.**

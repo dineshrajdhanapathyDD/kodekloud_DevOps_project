@@ -1,18 +1,24 @@
 
+## Questions:
 
-One of the Nautilus project developers need access to run docker commands on (App Server 1). This user is already created on the server. Accomplish this task as per details given below:
-
-
-User (javed) is not able to run docker commands on (App Server 1) in Stratos DC, make the required changes so that this user can run docker commands without (sudo).
+One of the Nautilus project developers need access to run docker commands on `App Server 1`. This user is already created on the server. Accomplish this task as per details given below:
 
 
+- User `javed` is not able to run docker commands on `App Server 1` in Stratos DC, make the required changes so that this user can run docker commands without `sudo`.
 
-1.Run docker command
+## Solution
+
+**1.Run docker command**
+
+```
 
 [root@stapp02 ~]# docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+```
 
-2. Now you can start Docker  with the following command with issue happen:
+**2. Now you can start Docker  with the following command with issue happen**
+
+```
 
 [root@stapp02 ~]# systemctl status docker
 ● docker.service - Docker Application Container Engine
@@ -37,14 +43,17 @@ Sep 11 12:58:23 stapp02.stratos.xfusioncorp.com systemd[1]: Started Docker Appli
 Sep 11 12:58:23 stapp02.stratos.xfusioncorp.com systemd[1]: docker.service: Failed to send unit change signal for docker.service: Connection reset by peer
 
 [root@stapp02 ~]# systemctl start docker
+```
 
+**3. Change the permissions of docker socket to be able to connect to the docker daemon `/var/run/docker.sock`**
 
-3. Change the permissions of docker socket to be able to connect to the docker daemon /var/run/docker.sock
-
+```
 [root@stapp02 ~]# sudo chmod 666 /var/run/docker.sock  
+```
 
+**4. Make sure docker socket file exist with correct parameters** 
 
-4. Make sure docker socket file exist with correct parameters 
+```
 
 [root@stapp02 ~]# rpm -ql docker-ce-20.10.13-3.el7.x86_64
 
@@ -69,17 +78,21 @@ SocketGroup=docker
 
 [Install]
 WantedBy=sockets.target
+```
 
+**5. Add your user to the Docker**
 
-5. Add your user to the Docker
+```
 
 [root@stapp02 ~]# ls -l /var/run/docker.sock
 srw-rw---- 1 root docker 0 Sep 11 12:58 /var/run/docker.sock
 
 root@stapp02 ~]# usermod -a -G docker javed
+```
 
+**6. If you face above  error while start docker, then run below command to resolve issue** 
 
-6. If you face above  error while start docker, then run below command to resolve issue 
+```
 
 [root@stapp02 ~]# systemctl start docker
 [root@stapp02 ~]# systemctl status docker
@@ -103,11 +116,14 @@ Sep 11 13:11:27 stapp02.stratos.xfusioncorp.com systemd[1]: docker.service: Tryi
 Sep 11 13:11:27 stapp02.stratos.xfusioncorp.com systemd[1]: docker.service: Installed new job docker.service/start as 130
 Sep 11 13:11:27 stapp02.stratos.xfusioncorp.com systemd[1]: docker.service: Enqueued job docker.service/start as 130
 Sep 11 13:11:27 stapp02.stratos.xfusioncorp.com systemd[1]: docker.service: Job docker.service/start finished, result=done
+```
 
+**7. Validate by running**
 
-7. Validate by running
+```
 
 [root@stapp02 ~]# docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+```
 
-8. Click on Finish & Confirm to complete the task successful
+**8. Click on `Finish` & `Confirm` to complete the task successful**
