@@ -1,75 +1,79 @@
 
 
-Questions:
+## Questions:
 
-Some developers are working on a common repository where they are testing some features for an application. They are having three branches (excluding the master branch) in this repository where they are adding changes related to these different features. They want to test these changes on Stratos DC app servers so they need a Jenkins job using which they can deploy these different branches as per requirements. Configure a Jenkins job accordingly.
+Some developers are working on a common repository where they are testing some features for an application. They are having three branches `excluding the master branch` in this repository where they are adding changes related to these different features. They want to test these changes on Stratos DC app servers so they need a Jenkins job using which they can deploy these different branches as per requirements. Configure a Jenkins job accordingly.
 
-Click on the (Jenkins) button on the top bar to access the Jenkins UI. Login using username (admin) and password (Adm!n321).
-
-
-Similarly, click on (Gitea) button to access the (Gitea) page. Login to Gitea server using username (sarah) and password (Sarah_pass123).
-
-1. There is a Git repository named (web_app) on Gitea where developers are pushing their changes. It has three branches (version1, version2 and version3) (excluding the (master) branch). You need not to make any changes in the repository.
+- Click on the `Jenkins` button on the top bar to access the Jenkins UI. Login using username `admin` and password `Adm!n321`.
 
 
-2. Create a Jenkins job named (app-job).
+- Similarly, click on `Gitea` button to access the `Gitea` page. Login to Gitea server using username `sarah` and password `Sarah_pass123`.
 
-3. Configure this job to have a choice parameter named (Branch) with choices as given below:
-
-(version1)
-
-(version2)
-
-(version3)
+1. There is a Git repository named `web_app` on Gitea where developers are pushing their changes. It has three branches `version1, version2 and version3` (excluding the `master` branch). You need not to make any changes in the repository.
 
 
-4. Configure the job to fetch changes from above mentioned Git repository and make sure it should fetches the changes from the respective branch which you are passing as a choice in the choice parameter while building the job. For example if you choose (version1) then it must fetch and deploy the changes from branch (version1).
+2. Create a Jenkins job named `app-job`.
 
-5. Configure this job to use custom workspace rather than a default workspace and custom workspace directory should be created under (/var/lib/jenkins) (for example (/var/lib/jenkins/version1)) location rather than under any sub-directory etc. The job should use a workspace as per the value you will pass for (Branch) parameter while building the job. For example if you choose (version) while building the job then it should create a workspace directory called (version1) and should fetch Git repository etc within that directory only.
+3. Configure this job to have a choice parameter named `Branch` with choices as given below:
 
-Configure the job to deploy code (fetched from Git repository) on storage server (in Stratos DC) under (/var/www/html) directory. Since its a shared volume.
+`version1`
+
+`version2`
+
+`version3`
+
+
+4. Configure the job to fetch changes from above mentioned Git repository and make sure it should fetches the changes from the respective branch which you are passing as a choice in the choice parameter while building the job. For example if you choose `version1` then it must fetch and deploy the changes from branch `version1`.
+
+5. Configure this job to use custom workspace rather than a default workspace and custom workspace directory should be created under `/var/lib/jenkins` (for example `/var/lib/jenkins/version1`) location rather than under any sub-directory etc. The job should use a workspace as per the value you will pass for `Branch` parameter while building the job. For example if you choose `version` while building the job then it should create a workspace directory called `version1` and should fetch Git repository etc within that directory only.
+
+Configure the job to deploy code `fetched from Git repository` on storage server `in Stratos DC` under `/var/www/html` directory. Since its a shared volume.
 
 You can access the website by clicking on App button.
 
 Note:
 
-You might need to install some plugins and restart Jenkins service. So, we recommend clicking on (Restart Jenkins when installation is complete and no jobs are running) on plugin installation/update page i.e update centre. Also, Jenkins UI sometimes gets stuck when Jenkins service restarts in the back end. In this case please make sure to refresh the UI page.
+You might need to install some plugins and restart Jenkins service. So, we recommend clicking on `Restart Jenkins when installation is complete and no jobs are running` on plugin installation/update page i.e update centre. Also, Jenkins UI sometimes gets stuck when Jenkins service restarts in the back end. In this case please make sure to refresh the UI page.
 
 For these kind of scenarios requiring changes to be done in a web UI, please take screenshots so that you can share it with us for review in case your task is marked incomplete. You may also consider using a screen recording software such as loom.com to record and share your work.
 
 
 
-Solution: 
+## Solution: 
 
-1. Click on the + button in the top left corner and select option Select port to view on Host 1, enter port 8080 and click on Display Port. You should be able to access the Jenkins login page. Login using username admin and Adm!n321 password.
+**1. Click on the + button in the top left corner and select option Select port to view on Host 1, enter port 8080 and click on Display Port.**
+
+- Able to access the Jenkins login page. Login using username admin and Adm!n321 password.
 
 
 click on Gitea button to access the Gitea page. Login to Gitea server using username sarah and password Sarah_pass123.
 
 
 
-2. Click Jenkins > Manage Jenkins > Manage Plugins and click Available tab.
+**2. Click Jenkins > Manage Jenkins > Manage Plugins and click Available tab.**
 
-Search for Git. Select Gitea, SSH & Publish over SSH plugin and click Download now and install after restart
-
-
-3. In the following screen, click checkbox Restart Jenkins when installation is complete.
+- Search for Git. Select Gitea, SSH & Publish over SSH plugin and click Download now and install after restart
 
 
-4. Setup Credentials for GIT user ( Sarah)
-
-Jenkins > Manage Jenkins > Manage Credentials, click Global under Stores scoped to Jenkins and Add Credentials
+**3. In the following screen, click checkbox Restart Jenkins when installation is complete.**
 
 
+**4. Setup Credentials for GIT user ( Sarah)**
+
+- Jenkins > Manage Jenkins > Manage Credentials, click Global under Stores scoped to Jenkins and Add Credentials
+
+```
 username - sarah
 password - Sarah_pass123\
 id- sarah -> create button click
+```
 
 
+**5. Configure Publish Over SSH**
 
-5. Configure Publish Over SSH
+- Jenkins > Manage Jenkins > Configure System under Publish over SSH > SSH Servers click Add
 
-Jenkins > Manage Jenkins > Configure System under Publish over SSH > SSH Servers click Add
+```
 
 name - ststor01
 hostname -ststor01
@@ -81,9 +85,11 @@ use password authentication or use a directory - storage server password
 passpharse/password - Bl@kW
 
 save button click
+```
 
+**6.  Login on storage server & Verify Permissions for/var/www/html directory**
 
-6.  Login on storage server & Verify Permissions for/var/www/html directory
+```
 
 thor@jump_host ~$ ssh natasha@ststor01
 natasha@ststor01's password: Bl@kW
@@ -97,20 +103,23 @@ natasha@ststor01's password: Bl@kW
 
 [root@ststor01 ~]# ls /var/www/html
 index.html
+```
 
-7. Create a Jenkins job named app-job.
 
-enter job name - app-job-> choose freestyle project-> then click ok
+**7. Create a Jenkins job named app-job.**
 
-8. Create a Parameterized Build
+- enter job name - app-job-> choose freestyle project-> then click ok
 
-general->
+**8. Create a Parameterized Build**
+
+- general->
 choose this project is parameterized.
 ->choice parameter-> name= Branch-> choices=version1, version2, version3 .
 
 click box->Use custom workspace
 directory - $JENKINS_HOME/$Branch
 
+```
 Source Code Management
 CHOOSE :
 CLICK GIT OPTIONS:
@@ -123,13 +132,16 @@ Branches to build -> Branch Specifier (blank for 'any') -> $Branch
 Build Environment ->Send files or execute commands over SSH before the build starts -> SSH Publishers -> Name -> ststor01 
 
 Transfers ->Transfer Set -> Source files -> **/* -> click save.
+```
+
+**9. Create the project app-job usin build with parameter:**
+
+- Project app-job-> build with parameter -> Branch -> choose version1,version2 , version3 -> then build
 
 
-9. Create the project app-job usin build with parameter:
-Project app-job-> build with parameter -> Branch -> choose version1,version2 , version3 -> then build
+- Project app-job-> build with parameter -> Branch -> choose version1 -> then build
 
-
-Project app-job-> build with parameter -> Branch -> choose version1 -> then build
+```
 
 Console Output
 Started by user admin
@@ -159,8 +171,11 @@ SSH: Connecting with configuration [ststor01] ...
 SSH: Disconnecting configuration [ststor01] ...
 SSH: Transferred 1 file(s)
 Finished: SUCCESS
+```
 
-Project app-job-> build with parameter -> Branch -> choose version2  -> then build
+- Project app-job-> build with parameter -> Branch -> choose version2  -> then build
+
+```
 
 Console Output
 Started by user admin
@@ -190,9 +205,11 @@ SSH: Connecting with configuration [ststor01] ...
 SSH: Disconnecting configuration [ststor01] ...
 SSH: Transferred 1 file(s)
 Finished: SUCCESS
+```
 
+- Project app-job-> build with parameter -> Branch -> choose version3 -> then build
 
-Project app-job-> build with parameter -> Branch -> choose version3 -> then build
+```
 
 Console Output
 Started by user admin
@@ -222,6 +239,6 @@ SSH: Connecting with configuration [ststor01] ...
 SSH: Disconnecting configuration [ststor01] ...
 SSH: Transferred 1 file(s)
 Finished: SUCCESS.
+```
 
-
-10. Click on Finish & Confirm to complete the task successful
+**10. Click on `Finish` & `Confirm` to complete the task successful**
