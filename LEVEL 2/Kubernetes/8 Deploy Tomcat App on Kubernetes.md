@@ -1,26 +1,29 @@
 
 
-Questions:
+## Questions:
+
 A new java-based application is ready to be deployed on a Kubernetes cluster. The development team had a meeting with the DevOps team to share the requirements and application scope. The team is ready to setup an application stack for it under their existing cluster. Below you can find the details for this:
 
 
 
-Create a namespace named tomcat-namespace-devops.
+- Create a namespace named tomcat-namespace-devops.
 
-Create a deployment for tomcat app which should be named as tomcat-deployment-devops under the same namespace you created. Replica count should be 1, the container should be named as tomcat-container-devops, its image should be gcr.io/kodekloud/centos-ssh-enabled:tomcat and its container port should be 8080.
+-  Create a deployment for tomcat app which should be named as tomcat-deployment-devops under the same namespace you created. Replica count should be 1, the container should be named as tomcat-container-devops, its image should be gcr.io/kodekloud/centos-ssh-enabled:tomcat and its container port should be 8080.
 
-Create a service for tomcat app which should be named as tomcat-service-devops under the same namespace you created. Service type should be NodePort and nodePort should be 32227.
+- Create a service for tomcat app which should be named as tomcat-service-devops under the same namespace you created. Service type should be NodePort and nodePort should be 32227.
 
-Before clicking on Check button please make sure the application is up and running.
+-  Before clicking on Check button please make sure the application is up and running.
 
 You can use any labels as per your choice.
 
 Note: The kubectl on jump_host has been configured to work with the kubernetes cluster.
 
 
-Solution:  
+## Solution:  
 
-1. At first  kubectl  utility configure and working from jump server, run below commands
+**1. At first  kubectl  utility configure and working from jump server, run below commands**
+
+```
 
 thor@jump_host ~$ kubectl get namespace
 NAME                 STATUS   AGE
@@ -32,8 +35,11 @@ local-path-storage   Active   43m
 
 thor@jump_host ~$ kubectl get pods
 No resources found in default namespace.
+```
 
-2. Create new namespace 
+**2. Create new namespace** 
+
+```
 
 thor@jump_host ~$ kubectl create namespace tomcat-namespace-devops
 namespace/tomcat-namespace-nautilus created
@@ -46,9 +52,12 @@ kube-public                 Active   46m
 kube-system                 Active   46m
 local-path-storage          Active   46m
 tomcat-namespace-nautilus   Active   26s
+```
 
-3.  Create yaml  file with all the parameters , you can copy form gitlab
-    https://gitlab.com/nb-tech-support/devops.git
+**3.  Create yaml  file with all the parameters**
+
+
+```
 
 thor@jump_host ~$ vi /tmp/tomcat.yaml
 
@@ -91,9 +100,12 @@ spec:
 exit  :wq
 
 thor@jump_host ~$ cat /tmp/tomcat.yaml
+```
 
+**4. Run below command to create pod**
 
-4. Run below command to create pod
+```
+
 thor@jump_host ~$ kubectl create -f /tmp/tomcat.yaml
 service/tomcat-service-devops created
 deployment.apps/tomcat-deployment-devops created
@@ -105,8 +117,11 @@ tomcat-deployment-devops   1/1     1            1           34s
 thor@jump_host ~$ kubectl get pods -n tomcat-namespace-devops
 NAME                                        READY   STATUS    RESTARTS   AGE
 tomcat-deployment-devops-67846cfffd-9v57f   1/1     Running   0          63s
+```
 
-6.  Validate the task by running below command 
+**6.  Validate the task by running below command**
+
+```
 
 thor@jump_host ~$ kubectl exec tomcat-deployment-devops-67846cfffd-9v57f -n tomcat-namespace-devops -- curl http://localhost:8080
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -130,9 +145,8 @@ and open the template in the editor.
     </body>
 </html>
 100   471  100   471    0     0   2378      0 --:--:-- --:--:-- --:--:--  2378
+```
 
-
-
-7.  Click on Finish & Confirm to complete the task successful
+**7.  Click on `Finish` & `Confirm` to complete the task successful**
 
 

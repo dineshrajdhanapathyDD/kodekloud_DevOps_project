@@ -1,19 +1,22 @@
 
 
-Questions:
+## Questions:
+
 Some of the Nautilus team developers are developing a static website and they want to deploy it on Kubernetes cluster. They want it to be highly available and scalable. Therefore, based on the requirements, the DevOps team has decided to create a deployment for it with multiple replicas. Below you can find more details about it:
 
 
 
-Create a deployment using nginx image with latest tag only and remember to mention the tag i.e nginx:latest. Name it as nginx-deployment. The container should be named as nginx-container, also make sure replica counts are 3.
+1. Create a deployment using nginx image with latest tag only and remember to mention the tag i.e nginx:latest. Name it as nginx-deployment. The container should be named as nginx-container, also make sure replica counts are 3.
 
-Create a NodePort type service named nginx-service. The nodePort should be 30011.
+2. Create a NodePort type service named nginx-service. The nodePort should be 30011.
 
 Note: The kubectl utility on jump_host has been configured to work with the kubernetes cluster.
 
-Solution:  
+## Solution:  
 
-1. At first  check existing deployment and  pods running status   
+**1. At first  check existing deployment and  pods running status**  
+
+```
 
 thor@jump_host ~$ kubectl get namespace
 NAME                 STATUS   AGE
@@ -24,12 +27,11 @@ kube-system          Active   3h28m
 local-path-storage   Active   3h28m
 thor@jump_host ~$ kubectl get pods
 No resources found in default namespace.
+```
 
+**2.  Create YAML  file with all the parameters**
 
-2.  Create YAML  file with all the parameters, you can copy form
- GitLab
-
-    https://gitlab.com/nb-tech-support/devops.git
+```
 
 thor@jump_host ~$ vi /tmp/nginx.yml
 thor@jump_host ~$ cat /tmp/nginx.yml
@@ -69,24 +71,31 @@ spec:
       containers:
         - name: nginx-container
           image: nginx:latest
+```
+ 
+**3. Run below command to create pod**
 
- 3. Run below command to create pod 
+```
 
 thor@jump_host ~$ kubectl create -f /tmp/nginx.yml
 service/nginx-service created
 deployment.apps/nginx-deployment created
+```
 
+**4.  Wait for pods to get running status**
 
- 4.  Wait for pods to get running status
+```
 
 thor@jump_host ~$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-56cbd5d774-5t9wm   1/1     Running   0          31s
 nginx-deployment-56cbd5d774-m7zjq   1/1     Running   0          31s
 nginx-deployment-56cbd5d774-qtzwk   1/1     Running   0          31s
+```
 
+**5.  Validate the task by running below command**
 
-5.  Validate the task by running below command 
+```
 
 thor@jump_host ~$ kubectl exec nginx-deployment-56cbd5d774-m7zjq -- curl http://localhost
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -115,7 +124,8 @@ Commercial support is available at
 </body>
 </html>
 100   615  100   615    0     0   709k      0 --:--:-- --:--:-- --:--:--  600k
+```
 
-6.  Click on Finish & Confirm to complete the task successfully
+**6.  Click on `Finish` & `Confirm` to complete the task successfully**
 
 

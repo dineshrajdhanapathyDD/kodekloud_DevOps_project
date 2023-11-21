@@ -1,18 +1,21 @@
 
 
-Questions:
+## Questions:
 
 One of the DevOps team member was trying to install a WordPress website on a LAMP stack which is essentially deployed on Kubernetes cluster. It was working well and we could see the installation page a few hours ago. However something is messed up with the stack now due to a website went down. Please look into the issue and fix it:
 
-FYI, deployment name is (lamp-wp) and its using a service named (lamp-service). The Apache is using http default port and nodeport is (30008). From the application logs it has been identified that application is facing some issues while connecting to the database in addition to other issues. Additionally, there are some environment variables associated with the pods like (MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST).
+FYI, deployment name is `lamp-wp` and its using a service named `lamp-service`. The Apache is using http default port and nodeport is `30008`. From the application logs it has been identified that application is facing some issues while connecting to the database in addition to other issues. Additionally, there are some environment variables associated with the pods like `MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST`.
 
 Also do not try to delete/modify any other existing components like deployment name, service name, types, labels etc.
 
-(Note): The (kubectl) utility on (jump_host) has been configured to work with the kubernetes cluster.
+`Note`: The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
 
-Solution:  
-1. Check existing running pods and deploy:
+## Solution:  
+
+**1. Check existing running pods and deploy:**
+
+```
 
 thor@jump_host ~$ k get po,deploy,svc,secrets
 NAME                           READY   STATUS    RESTARTS   AGE
@@ -31,16 +34,20 @@ secret/mysql-db-url      Opaque   1      9m37s
 secret/mysql-host        Opaque   1      9m37s
 secret/mysql-root-pass   Opaque   1      9m38s
 secret/mysql-user-pass   Opaque   2      9m37s
+```
 
+**2. From the httpd container, test connectivity to the MySQL.**
 
-2. From the httpd container, test connectivity to the MySQL.
+```
 
 thor@jump_host ~$ kubectl exec -it lamp-wp-56c7c454fc-l7cj8 -c httpd-php-container -- mysql
 
 error: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec "fc05200c708bd534022e7fafa37148e03f7581b590923420ff630d956a4e5840": OCI runtime exec failed: exec failed: unable to start container process: exec: "mysql": executable file not found in $PATH: unknown
+```
 
+**3. In some iterations of the labs, the nodePort could be showing 30009 or any other port instead of 30008. If you encountered this, retrieve the YAML and modify it.**
 
-3. In some iterations of the labs, the nodePort could be showing 30009 or any other port instead of 30008. If you encountered this, retrieve the YAML and modify it.
+```
 
 thor@jump_host ~$ k get svc lamp-service -o yaml > lamp-svc.yml
 thor@jump_host ~$ vi lamp-svc.yml
@@ -81,29 +88,31 @@ spec:
   type: NodePort
 status:
   loadBalancer: {}
-
+```
 After changing, apply.
-
+```
 thor@jump_host ~$ k apply -f lamp-svc.yml 
 service/lamp-service configured
-
+```
 Verify 
-
+```
 thor@jump_host ~$ k get svc
 NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
 kubernetes      ClusterIP   10.96.0.1       <none>        443/TCP        23m
 lamp-service    NodePort    10.96.147.12    <none>        80:30008/TCP   17m
 mysql-service   ClusterIP   10.96.171.144   <none>        3306/TCP       17m
-
-
+```
+```
 thor@jump_host ~$ k get svc
 NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
 kubernetes      ClusterIP   10.96.0.1       <none>        443/TCP        23m
 lamp-service    NodePort    10.96.147.12    <none>        80:30008/TCP   17m
 mysql-service   ClusterIP   10.96.171.144   <none>        3306/TCP       17m
+```
 
+**4. To make the troubleshooting easier, we can save the container names and pod name.**
 
-4. To make the troubleshooting easier, we can save the container names and pod name.
+```
 
 thor@jump_host ~$ HTTP=$(kubectl get pod  -o=jsonpath='{.items[*].spec.containers[0].name}') ; echo "HTTP: $HTTP"
 HTTP: httpd-php-container
@@ -114,9 +123,11 @@ MYSQL: mysql-container
 thor@jump_host ~$ 
 thor@jump_host ~$ POD=$(kubectl get pods -o=jsonpath='{.items[*].metadata.name}'); echo "POD: $POD"
 POD: lamp-wp-56c7c454fc-l7cj8
+```
 
+**5. we need to modify the PHP file inside the HTTP container.**
 
-5. we need to modify the PHP file inside the HTTP container.
+```
 
 thor@jump_host ~$ k logs -f $POD -c $HTTP 
 -> Executing /opt/docker/provision/entrypoint.d/05-permissions.sh
@@ -154,9 +165,11 @@ Setting php-fpm user to application
 2023-09-20 15:37:34,590 INFO success: syslogd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
 [20-Sep-2023 15:37:34] NOTICE: fpm is running, pid 94
 [20-Sep-2023 15:37:34] NOTICE: ready to handle connections
+```
 
+**6. Open a shell to the HTTP container and find the index.php file.**
 
-6. Open a shell to the HTTP container and find the index.php file.
+```
 
 thor@jump_host ~$ k exec -it $POD -c $HTTP -- sh
 / # ls -la
@@ -193,9 +206,11 @@ total 12
 drwxr-xr-x    1 applicat applicat      4096 Sep 20 15:37 .
 drwxr-xr-x    1 root     root          4096 Sep 20 15:37 ..
 -rw-r--r--    1 root     root           435 Sep 20 15:37 index.php
+```
 
+**7. Check the index.app file. Here we can see that there's some typo error. Edit this to match the variables specified in the instructions/requirements.**
 
-7. Check the index.app file. Here we can see that there's some typo error. Edit this to match the variables specified in the instructions/requirements.
+```
 
 thor@jump_host ~$ k exec -it $POD -c $HTTP -- sh
 / # cat /app/index.php 
@@ -235,9 +250,9 @@ if ($result->connect_error) {
    die("Connection failed: " . $conn->connect_error);
 }
   echo "Connected successfully";/ 
+```
 
-
-8. While inside the container, restart the php-fpm service. Afterwards, exit out of the container.
+**8. While inside the container, restart the php-fpm service. Afterwards, exit out of the container.**
 
 # service php-fpm restart
 php-fpm:php-fpmd: stopped
@@ -246,7 +261,9 @@ php-fpm:php-fpmd: started
 php-fpm:php-fpmd                 RUNNING   pid 269, uptime 0:00:12
 
 
-9. Checking the logs again:
+**9. Checking the logs again:**
+
+```
 
 thor@jump_host ~$ k logs -f $POD -c $HTTP
 -> Executing /opt/docker/provision/entrypoint.d/05-permissions.sh
@@ -294,9 +311,11 @@ Setting php-fpm user to application
 Setting php-fpm user to application
 [20-Sep-2023 16:06:50] NOTICE: fpm is running, pid 269
 [20-Sep-2023 16:06:50] NOTICE: ready to handle connections
+```
 
+**10. Check the environment variables in both containers.**
 
-10. Check the environment variables in both containers.
+```
 
 thor@jump_host ~$ kubectl exec -it $POD -c $HTTP -- env | grep -i mysql
 MYSQL_ROOT_PASSWORD=R00t
@@ -346,13 +365,13 @@ thor@jump_host ~$ kubectl describe pod | grep -A 6 Env
       MYSQL_PASSWORD:       <set to the key 'password' in secret 'mysql-user-pass'>  Optional: false
       MYSQL_HOST:           <set to the key 'host' in secret 'mysql-host'>           Optional: false
     Mounts:
+```
+
+**11. Click the App button at the top right to open the app URL in the new tab.**
+
+`https://30008-port-8fe4df238fd44458.labs.kodekloud.com/`
+
+-  Connected successfully
 
 
-11. Click the App button at the top right to open the app URL in the new tab.
-
-https://30008-port-8fe4df238fd44458.labs.kodekloud.com/
-
-Connected successfully
-
-
-12. Click on Finish & Confirm to complete the task successful
+**12. Click on `Finish` & `Confirm` to complete the task successful**

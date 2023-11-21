@@ -1,34 +1,40 @@
 
 
-Questions:
+## Questions:
 
 The Nautilus DevOps teams is planning to set up a Grafana tool to collect and analyze analytics from some applications. They are planning to deploy it on Kubernetes cluster. Below you can find more details.
 
 
 
-1.) Create a deployment named (grafana-deployment-xfusion) using any grafana image for Grafana app. Set other parameters as per your choice.
+1. Create a deployment named `grafana-deployment-xfusion` using any grafana image for Grafana app. Set other parameters as per your choice.
 
 
-2.) Create (NodePort) type service with nodePort (32000) to expose the app.
+2. Create `NodePort` type service with nodePort `32000` to expose the app.
 
 
-(You need not to make any configuration changes inside the Grafana app once deployed, just make sure you are able to access the Grafana login page).
+`You need not to make any configuration changes inside the Grafana app once deployed, just make sure you are able to access the Grafana login page`.
 
 
-(Note): The (kubectl) on (jump_host) has been configured to work with kubernetes cluster.
+`Note`: The `kubectl` on `jump_host` has been configured to work with kubernetes cluster.
 
 
-Solution:  
-1. Check existing running Pods  & Services 
+## Solution:  
+
+**1. Check existing running Pods  & Services**
+
+```
 
 thor@jump_host ~$ kubectl get pods
 No resources found in default namespace.
 thor@jump_host ~$ kubectl get services
 NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   27m
+```
+
+**2.  Create a YAML  file with all the parameters,  Kindly do the changes as per task**
 
 
-2.  Create a YAML  file with all the parameters,  Kindly do the changes as per task
+```
 
 thor@jump_host ~$ vi /tmp/grafana.yaml
 thor@jump_host ~$ cat /tmp/grafana.yaml
@@ -97,16 +103,20 @@ spec:
       targetPort: http-grafana
       nodePort: 32000
   type: NodePort
+```
 
+**3. Run the below command to create a pod**
 
-3. Run the below command to create a pod 
+```
 
 thor@jump_host ~$ kubectl create -f /tmp/grafana.yaml
 deployment.apps/grafana-deployment-xfusion created
 service/grafana-service created
+```
 
+**4.  Wait for the pod to get completed status**
 
-4.  Wait for the pod to get completed status
+```
 
 thor@jump_host ~$ kubectl get service
 NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
@@ -120,14 +130,15 @@ grafana-deployment-xfusion-79bfff94-7mdxq   0/1     Running   0          55s
 thor@jump_host ~$ kubectl get pods
 NAME                                        READY   STATUS    RESTARTS   AGE
 grafana-deployment-xfusion-79bfff94-7mdxq   1/1     Running   0          2m53s
+```
+
+**5.  Validate the task by open port view WUI**
 
 
-5.  Validate the task by open port view WUI
-
-click on Grafana from top bar to open url:
+- click on Grafana from top bar to open url:
 
 Grafana app once deployed, just make sure you are able to access the Grafana login page.
 
 
-6.  Click on Finish & Confirm to complete the task successfully.
+**6.  Click on `Finish` & `Confirm` to complete the task successfully.**
 

@@ -1,17 +1,19 @@
 
 
-Questions:
+## Questions:
 
 Last week, the Nautilus DevOps team deployed a redis app on Kubernetes cluster, which was working fine so far. This morning one of the team members was making some changes in this existing setup, but he made some mistakes and the app went down. We need to fix this as soon as possible. Please take a look.
 
-The deployment name is (redis-deployment). The pods are not in running state right now, so please look into the issue and fix the same.
+The deployment name is `redis-deployment`. The pods are not in running state right now, so please look into the issue and fix the same.
 
-(Note): The (kubectl) utility on (jump_host) has been configured to work with the kubernetes cluster.
+`Note`: The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
 
+## Solution:  
 
-Solution:  
-1. Check existing running deployment, pods 
+**1. Check existing running deployment, pods**
+
+```
 
 thor@jump_host ~$ kubectl get deployment
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
@@ -23,9 +25,11 @@ thor@jump_host ~$ kubectl get configmap
 NAME               DATA   AGE
 kube-root-ca.crt   1      18m
 redis-config       2      3m10s
+```
 
+**2. Describe the configuration of the deployment**
 
-2. Describe the configuration of the deployment
+```
 
 thor@jump_host ~$ kubectl describe deployment
 Name:                   redis-deployment
@@ -71,7 +75,9 @@ Events:
   Type    Reason             Age    From                   Message
   ----    ------             ----   ----                   -------
   Normal  ScalingReplicaSet  3m48s  deployment-controller  Scaled up replica set redis-deployment-54cdf4f76d to 1
+```
 
+```
 
 thor@jump_host ~$ kubectl describe configmap
 Name:         kube-root-ca.crt
@@ -129,7 +135,9 @@ BinaryData
 ====
 
 Events:  <none>
+```
 
+```
 
 thor@jump_host ~$ kubectl describe pods
 Name:             redis-deployment-54cdf4f76d-dmst5
@@ -194,9 +202,11 @@ Events:
   Normal   Scheduled    5m44s                 default-scheduler  Successfully assigned default/redis-deployment-54cdf4f76d-dmst5 to kodekloud-control-plane
   Warning  FailedMount  94s (x10 over 5m43s)  kubelet            MountVolume.SetUp failed for volume "config" : configmap "redis-conig" not found
   Warning  FailedMount  84s (x2 over 3m41s)   kubelet            Unable to attach or mount volumes: unmounted volumes=[config], unattached volumes=[], failed to process volumes=[]: timed out waiting for the condition
+```
 
+**3. we have troubleshoot the issues with deployment lets fixed by editing**
 
-3. we have troubleshoot the issues with deployment lets fixed by editing
+```
 thor@jump_host ~$ kubectl edit deployment
 deployment.apps/redis-deployment edited
 
@@ -207,9 +217,11 @@ search word ->
 again search word ->
 /alpin - change as alpine
 /alpin - change as alpine
+```
 
+**4. Wait for the pod to get completed status**
 
-4. Wait for the pod to get completed status
+```
 
 thor@jump_host ~$ kubectl get deploy
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
@@ -218,6 +230,6 @@ redis-deployment   1/1     1            1           20m
 thor@jump_host ~$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 redis-deployment-7c8d4f6ddf-mldq8   1/1     Running   0          2m28s
+```
 
-
-5. Click on Finish & Confirm to complete the task successful
+**5. Click on `Finish` & `Confirm` to complete the task successful**
