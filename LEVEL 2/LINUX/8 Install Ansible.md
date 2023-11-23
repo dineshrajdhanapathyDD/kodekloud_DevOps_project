@@ -1,15 +1,18 @@
 
 
-Questions:
-During the weekly meeting, the Nautilus DevOps team discussed about the automation and configuration management solutions that they want to implement. While considering several options, the team has decided to go with (Ansible0 for now due to its simple setup and minimal pre-requisites. The team wanted to start testing using Ansible, so they have decided to use (jump host) as an Ansible controller to test different kind of tasks on rest of the servers.
+## Questions:
+
+During the weekly meeting, the Nautilus DevOps team discussed about the automation and configuration management solutions that they want to implement. While considering several options, the team has decided to go with Ansible for now due to its simple setup and minimal pre-requisites. The team wanted to start testing using Ansible, so they have decided to use `jump host` as an Ansible controller to test different kind of tasks on rest of the servers.
 
 
-Install (ansible) version (4.10.0) on (Jump host) using (pip3) only. Make sure Ansible binary is available globally on this system, i.e all users on this system are able to run Ansible commands.
+Install `ansible` version `4.10.0` on `Jump host` using `pip3` only. Make sure Ansible binary is available globally on this system, i.e all users on this system are able to run Ansible commands.
 
 
-Solution:  
-1. Switch to Root user on jump server
+## Solution: 
 
+**1. Switch to Root user on jump server**
+
+```
 thor@jump_host ~$ sudo su -
 
 [sudo] password for thor: mjolnir123
@@ -24,10 +27,11 @@ CentOS-Stream-Extras-common.repo     CentOS-Stream-ResilientStorage.repo  redhat
 CentOS-Stream-Extras.repo            CentOS-Stream-Sources.repo           ubi.repo
 CentOS-Stream-HighAvailability.repo  epel-modular.repo
 CentOS-Stream-Media.repo             epel-playground.repo
+```
 
+**2. To Install specific ansible version, required ansible repo**
 
-2. To Install specific ansible version, required ansible repo
-
+```
 [root@jump_host yum.repos.d]# vi ansible.repo
 [root@jump_host yum.repos.d]# cat ansible.repo
 [ansible]
@@ -41,10 +45,11 @@ enabled=1
 gpgcheck=1
 
 gpgkey=https://releases.ansible.com/keys/RPM-GPG-KEY-ansible-release.pub
+```
 
+**3. To Install Ansible run below commands using pip3**
 
- 3. To Install Ansible run below commands using pip3
-
+```
 ([root@jump_host yum.repos.d]# pip3 install ansible 4.10.0)-optional
 
 [root@jump_host yum.repos.d]# pip3 install ansible
@@ -85,10 +90,11 @@ Installing collected packages: pycparser, pyparsing, MarkupSafe, cffi, resolveli
     Running setup.py install for ansible ... done
 Successfully installed MarkupSafe-2.0.1 ansible-4.10.0 ansible-core-2.11.12 cffi-1.15.1 cryptography-40.0.2 jinja2-3.0.3 packaging-21.3 pycparser-2.21 pyparsing-3.1.1 resolvelib-0.5.4
 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+```
 
+**4. Validate the ansible version.**
 
-4. Validate the ansible version. 
-
+```
 [root@jump_host yum.repos.d]# ansible --version
 [DEPRECATION WARNING]: Ansible will require Python 3.8 or newer on the controller starting with Ansible 2.12. Current 
 version: 3.6.8 (default, Jun 26 2023, 20:26:30) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]. This feature will be removed from 
@@ -104,9 +110,9 @@ ansible [core 2.11.12]
   python version = 3.6.8 (default, Jun 26 2023, 20:26:30) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
   jinja version = 3.0.3
   libyaml = True
+```
 
-
-5. Click on Finish & Confirm to complete the task successful
+**5. Click on `Finish` & `Confirm` to complete the task successful**
 
 
 

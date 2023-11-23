@@ -1,11 +1,12 @@
 
 
-Questions:
-To secure our (Nautilus) infrastructure in (Stratos Datacenter) we have decided to install and configure (firewalld) on all app servers. We have Apache and Nginx services running on these apps. Nginx is running as a reverse proxy server for Apache. We might have more robust firewall settings in the future, but for now we have decided to go with the given requirements listed below:
+## Questions:
 
-a. Allow all incoming connections on Nginx port, i.e (80).
+To secure our `Nautilus` infrastructure in `Stratos Datacenter` we have decided to install and configure `firewalld` on all app servers. We have Apache and Nginx services running on these apps. Nginx is running as a reverse proxy server for Apache. We might have more robust firewall settings in the future, but for now we have decided to go with the given requirements listed below:
 
-b. Block all incoming connections on Apache port, i.e (8080).
+a. Allow all incoming connections on Nginx port, i.e `80`.
+
+b. Block all incoming connections on Apache port, i.e `8080`.
 
 c. All rules must be permanent.
 
@@ -14,21 +15,25 @@ d. Zone should be public.
 e. If Apache or Nginx services aren't running already, please make sure to start them.
 
 
-Solution:  
+## Solution:  
 
-1. At first login on App server ssh tony@stapp01
+**1. At first login on App server ssh tony@stapp01**
 
+```
 thor@jump_host ~$ ssh tony@stapp01
 tony@stapp01's password: Ir0nM@n
+```
 
+**2. Switch to root user : sudo su -**
 
-2. Switch to root user : sudo su -
-
+```
 [tony@stapp01 ~]$ sudo su -
 [sudo] password for tony: Ir0nM@n
+```
 
+**3. Run Below command to check the existing Apache httpd & Nginx service status.**
 
-3. Run Below command to check the existing Apache httpd & Nginx service status.
+```
 [root@stapp01 ~]# systemctl status httpd &&  systemctl status nginx
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)
@@ -44,7 +49,6 @@ tony@stapp01's password: Ir0nM@n
            ├─594 /usr/sbin/httpd -DFOREGROUND
            ├─595 /usr/sbin/httpd -DFOREGROUND
            └─596 /usr/sbin/httpd -DFOREGROUND
-
 Aug 26 18:00:39 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Got notification message 
 from PID 573 (READY=1, STATUS=Running, listening on: port 8080)
 Aug 26 18:00:49 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Got notification message 
@@ -112,7 +116,6 @@ from PID 573 (READY=1, STATUS=Running, listening on: port 8080)
            ├─898 nginx: worker process
            ├─899 nginx: worker process
            └─900 nginx: worker process
-
 Aug 26 17:55:20 stapp01.stratos.xfusioncorp.com systemd[851]: nginx.service: Executing: /usr/sbin/ng
 inx
 Aug 26 17:55:20 stapp01.stratos.xfusioncorp.com systemd[1]: nginx.service: Child 851 belongs to ngin
@@ -131,9 +134,11 @@ inished, result=done
 Aug 26 17:55:20 stapp01.stratos.xfusioncorp.com systemd[1]: Started The nginx HTTP and reverse proxy server.
 Aug 26 17:55:20 stapp01.stratos.xfusioncorp.com systemd[1]: nginx.service: Failed to send unit chang
 e signal for nginx.service: Connection reset by peer
+```
 
-4. Get the Apache & Nginx Listen port  by using the below command
+**4. Get the Apache & Nginx Listen port  by using the below command**
 
+```
 [root@stapp01 ~]# grep -i Listen /etc/httpd/conf/ht*  /etc/nginx/nginx.conf
 /etc/httpd/conf/httpd.conf:# Listen: Allows you to bind Apache to specific IP addresses and/or
 /etc/httpd/conf/httpd.conf:# Change this to Listen on specific IP addresses as shown below to 
@@ -143,8 +148,11 @@ e signal for nginx.service: Connection reset by peer
 /etc/nginx/nginx.conf:        listen       [::]:80 default_server;
 /etc/nginx/nginx.conf:#        listen       443 ssl http2 default_server;
 /etc/nginx/nginx.conf:#        listen       [::]:443 ssl http2 default_server;
+```
 
-5.  Now Install Firewalld : 
+**5.  Now Install Firewalld :**
+
+```
 
 [root@stapp01 ~]# yum install -y firewalld
 Updating Subscription Management repositories.
@@ -286,10 +294,11 @@ Installed:
   python3-slip-0.6.4-13.el8.noarch       python3-slip-dbus-0.6.4-13.el8.noarch      
 
 Complete!
+```
 
+**6. Start the firewalld service , Enable and Check the status** 
 
-6. Start the firewalld service , Enable and Check the status 
-
+```
 [root@stapp01 ~]# systemctl start firewalld && systemctl enable firewalld && systemctl status firewalld
 ● firewalld.service - firewalld - dynamic firewall daemon
    Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)
@@ -321,29 +330,31 @@ ng
 Aug 26 18:07:08 stapp01.stratos.xfusioncorp.com systemd[1]: firewalld.service: Failed to set invocat
 ion ID on control group /docker/bd1d697a7193f2052d20a27a05c88e9ce703ae4098ea0fc861be4e807bb3487d/system.slice/firewalld.serv
 ice, ignoring: Operation not permitted
+```
 
+**7. Allow the nginx port**
 
-7. Allow the nginx port
 
 ( Please make sure, you use  nginx port, refer Point 4. Above)
-
+```
 [root@stapp01 ~]# firewall-cmd --permanent --zone=public --add-port=8096/tcp
 success
+```
 
-
-8. Allow services http & https port 
-
+**8. Allow services http & https port** 
+```
 [root@stapp01 ~]# firewall-cmd --permanent --zone=public --add-service={http,https}
 success
+```
 
+**9. Allow the Apache http  port  with LB host IP**
 
-9. Allow the Apache http  port  with LB host IP
-
+```
 [root@stapp01 ~]# firewall-cmd --permanent --zone=public --add-rich-rule='rule family="ipv4" source                 address=172.16.238.14 port protocol=tcp port=8083 accept'
 success
+```
 
-
-10. Reload firewalld service to take effect & validate the rules
+**10. Reload firewalld service to take effect & validate the rules**
 
 
 Please Note :- I have shown only for stapp01. 
@@ -373,7 +384,7 @@ Password
 BigGr33n
 
 
-11.  Click on Finish & Confirm to complete the task successfully
+**11.  Click on Finish & Confirm to complete the task successfully**
 
 
 
