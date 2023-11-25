@@ -1,33 +1,36 @@
 
 
-Questions:
+## Questions:
 
-(xFusionCorp Industries) uses some monitoring tools to check the status of every service, application, etc running on the systems. Recently, the monitoring system identified that Apache service is not running on some of the (Nautilus Application Servers) in (Stratos Datacenter).
-
-
-
-1. Identify the faulty (Nautilus Application Server) and fix the issue. Also, make sure Apache service is up and running on all (Nautilus Application Servers). Do not try to stop any kind of firewall that is already running.
+`xFusionCorp Industries` uses some monitoring tools to check the status of every service, application, etc running on the systems. Recently, the monitoring system identified that Apache service is not running on some of the `Nautilus Application Servers` in `Stratos Datacenter`.
 
 
-2. Apache is running on (6200) port on all (Nautilus Application Servers) and its document root must be (/var/www/html) on all app servers.
+
+1. Identify the faulty `Nautilus Application Server` and fix the issue. Also, make sure Apache service is up and running on all `Nautilus Application Servers`. Do not try to stop any kind of firewall that is already running.
 
 
-3. Finally you can test from (jump host) using curl command to access Apache on all app servers and it should be reachable and you should get some static page. E.g. curl (http://172.16.238.10:6002/).
+2. Apache is running on `6200` port on all `Nautilus Application Servers` and its document root must be `/var/www/html` on all app servers.
 
 
-Solution:  
-1. At first login on App server  & Switch to  root user 
+3. Finally you can test from `jump host` using curl command to access Apache on all app servers and it should be reachable and you should get some static page. E.g. curl http://172.16.238.10:6002/.
 
+
+## Solution:
+
+**1. At first login on App server  & Switch to  root user** 
+
+```
 thor@jump_host ~$ ssh tony@stapp01
 
 tony@stapp01's password: Ir0nM@n
 [tony@stapp01 ~]$ sudo su -
 
 [sudo] password for tony: Ir0nM@n
+```
 
+**2. Run Below command to start  Apache httpd service ,while start you may get below error.**
 
-2. Run Below command to start  Apache httpd service ,while start you may get below error.
-
+```
 [root@stapp01 ~]# systemctl start httpd
 [root@stapp01 ~]# systemctl status  httpd.service
 ● httpd.service - The Apache HTTP Server
@@ -44,10 +47,11 @@ tony@stapp01's password: Ir0nM@n
            ├─1015 /usr/sbin/httpd -DFOREGROUND
            ├─1016 /usr/sbin/httpd -DFOREGROUND
            └─1017 /usr/sbin/httpd -DFOREGROUND
+```
 
+**3. Edit the  conf  file and correct the changes as per below**
 
-3. Edit the  conf  file and correct the changes as per below
-
+```
 [root@stapp01 ~]# vi /etc/httpd/conf/httpd.conf
 edit like this below
 Listen 6200->Listen 172.16.238.10:6200
@@ -409,35 +413,39 @@ EnableSendfile on
 #
 # Load config files in the "/etc/httpd/conf.d" directory, if any.
 IncludeOptional conf.d/*.conf
+```
 
-4.  Validate Apache httpd running  as per the task request
+**4.  Validate Apache httpd running  as per the task request**
 
+```
 [root@stapp01 ~]# curl http://172.16.238.10:5002/
 Welcome to xFusionCorp Industries!
 
-
+```
 
 With apeche Troubleshoot:
 
-Solution:  
-1. At first login on App server  & Switch to  root user stapp02:
+## Solution:  
+**1. At first login on App server  & Switch to  root user stapp02:**
 
+```
 [root@stapp01 ~]# ssh steve@stapp02
 steve@stapp02's password: 
 [steve@stapp02 ~]$ sudo su -
 [sudo] password for steve:
+```
 
+**2.Run Below command to start  Apache httpd service ,while start you may get below error.**
 
-
-2.Run Below command to start  Apache httpd service ,while start you may get below error.
-
+```
 [root@stapp02 ~]# systemctl start httpd
 Job for httpd.service failed because the control process exited with error code.
 See "systemctl status httpd.service" and "journalctl -xe" for details.
+```
 
-3. check the systemctl status httpd to know the reason of service failed.
+**3. check the systemctl status httpd to know the reason of service failed.**
 
-
+```
 [root@stapp02 ~]# systemctl start httpd
 Job for httpd.service failed because the control process exited with error code.
 See "systemctl status httpd.service" and "journalctl -xe" for details.
@@ -459,10 +467,11 @@ Sep 01 18:17:07 stapp02.stratos.xfusioncorp.com systemd[1]: httpd.service: Chang
 Sep 01 18:17:07 stapp02.stratos.xfusioncorp.com systemd[1]: httpd.service: Job httpd.service/start finished, result=failed
 Sep 01 18:17:07 stapp02.stratos.xfusioncorp.com systemd[1]: Failed to start The Apache HTTP Server.
 Sep 01 18:17:07 stapp02.stratos.xfusioncorp.com systemd[1]: httpd.service: Unit entered failed state.
+```
 
+**3.  You can cat the file with line no to check the syntax issue**
 
-3.  You can cat the file with line no to check the syntax issue
-
+```
 [root@stapp02 ~]# cat -n  /etc/httpd/conf/httpd.conf  |grep 34
     34  ServerRoot "/etc/httpd;"
     44  #Listen 12.34.56.78:80
@@ -486,10 +495,11 @@ Sep 01 18:17:07 stapp02.stratos.xfusioncorp.com systemd[1]: httpd.service: Unit 
 DocumentRoot "/var/www/html"
 
 # access content that does not live under the DocumentRoot.
+```
 
+**4. Edit the  conf  file and correct the changes as per below**
 
-4. Edit the  conf  file and correct the changes as per below
-
+```
 [root@stapp02 ~]# vi /etc/httpd/conf/httpd.conf
 
 Listen 6200->Listen 172.16.238.11:6200
@@ -878,9 +888,11 @@ IncludeOptional conf.d/*.conf
 # DocumentRoot: The directory out of which you will serve your
 DocumentRoot /var/www/html
     # access content that does not live under the DocumentRoot.
+```
 
-5.  Save the file and start the httpd service & check the status.
+**5.  Save the file and start the httpd service & check the status.**
 
+```
 [root@stapp02 ~]# systemctl start httpd
 [root@stapp02 ~]# systemctl status httpd
 ● httpd.service - The Apache HTTP Server
@@ -908,23 +920,17 @@ Sep 01 18:26:41 stapp02.stratos.xfusioncorp.com systemd[1]: httpd.service: Got n
 Sep 01 18:26:41 stapp02.stratos.xfusioncorp.com systemd[1]: httpd.service: Changed reload -> running
 Sep 01 18:26:41 stapp02.stratos.xfusioncorp.com systemd[1]: httpd.service: Got notification message from PID 1218 (READY=1, STATUS=Started, listening on: 172.16.238.11 port 6200, MAINPID=12>
 Sep 01 18:26:50 stapp02.stratos.xfusioncorp.com systemd[1]: httpd.service: Got notification message from PID 1218 (READY=1, STATUS=Running, listening on: 172.16.238.11 port 6200)
+```
 
-6.  Validate Apache httpd running  as per the task request
+**6.  Validate Apache httpd running  as per the task request**
 
+```
 [root@stapp02 ~]# curl http://172.16.238.11:6200/
 Welcome to xFusionCorp Industries!
 
+```
+
 Have to do this in all app server stapp01,stapp02, stapp03.
 
-(stapp03 credentials:
-
-172.16.238.12
-
-stapp03.stratos.xfusioncorp.com
-
-banner
-
-  BigGr33n
-
- Application 3 )
+(stapp03 credentials: 172.16.238.12 stapp03.stratos.xfusioncorp.com banner BigGr33n Application 3 )
 

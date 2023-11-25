@@ -1,42 +1,43 @@
 
 
-Questions:
-There is a static website running in (Stratos Datacenter). They have already configured the app servers and code is already deployed there. To make it work properly, they need to configure (LBR) server. There are number of options for that, but team has decided to go with (HAproxy). FYI, apache is running on port (8087) on all app servers. Complete this task as per below details.
+## Questions:
+
+There is a static website running in `Stratos Datacenter`. They have already configured the app servers and code is already deployed there. To make it work properly, they need to configure `LBR` server. There are number of options for that, but team has decided to go with `HAproxy`. FYI, apache is running on port `8087` on all app servers. Complete this task as per below details.
 
 
 
-a. Install and configure (HAproxy) on (LBR) server using (yum) only and make sure all app servers are added to (HAproxy) load balancer. (HAproxy) must serve on default (http) port (Note: Please do not remove (stats socket /var/lib/haproxy/stats) entry from haproxy default config.).
+a. Install and configure `HAproxy` on `LBR` server using `yum` only and make sure all app servers are added to `HAproxy` load balancer. `HAproxy` must serve on default `http` port (Note: Please do not remove (stats socket `/var/lib/haproxy/stats` entry from haproxy default config.).
 
-b. Once done, you can access the website using (StaticApp) button on the top bar.
+b. Once done, you can access the website using `StaticApp` button on the top bar.
 
 
-Solution:  
+## Solution:  
 
-1. At first you need to log in to all the app servers and find the Listen port & need to start the httpd services.
+**1. At first you need to log in to all the app servers and find the Listen port & need to start the httpd services.**
 
-2. Login on App server  ssh tony@stapp01
+**2. Login on App server  ssh tony@stapp01**
 
+```
 thor@jump_host ~$ ssh tony@stapp01
 
 tony@stapp01's password:Ir0nM@n
+```
 
-3. Switch to  root user : sudo su -
+**3. Switch to  root user : sudo su -**
 
+```
 [tony@stapp01 ~]$ sudo su -
 [sudo] password for tony: Ir0nM@n
-
-
 
 [root@stapp01 ~]# cat /etc/httpd/conf/httpd.conf |grep Listen
 # Listen: Allows you to bind Apache to specific IP addresses and/or
 # Change this to Listen on specific IP addresses as shown below to 
 #Listen 12.34.56.78:80
 Listen 8087
+```
 
-
-4. Enable httpd & start the service
-
-
+**4. Enable httpd & start the service**
+```
 [root@stapp01 ~]# systemctl enable httpd
 Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
 
@@ -66,9 +67,10 @@ Aug 30 18:36:14 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Tryin
 Aug 30 18:36:14 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Installed new job httpd.service/start as 93
 Aug 30 18:36:14 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Enqueued job httpd.service/start as 93
 Aug 30 18:36:14 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Job httpd.service/start finished, result=done
+```
 
-5. Validate Apache HTTPd running  as per the task request
-
+**5. Validate Apache HTTPd running  as per the task request**
+```
 [root@stapp01 ~]# cat /etc/httpd/conf/httpd.conf |grep Listen
 # Listen: Allows you to bind Apache to specific IP addresses and/or
 # Change this to Listen on specific IP addresses as shown below to 
@@ -76,25 +78,28 @@ Aug 30 18:36:14 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: Job h
 Listen 8087
 [root@stapp01 ~]# curl localhost:8087
 Welcome to xFusionCorp Industries!
+```
 
+- terminal -1
 
+- Now Login to the the LBR Server and install the haproxy 
+**1. At first login on LB server  ssh loki@stlb01**
 
-
-terminal -1
-Now Login to the the LBR Server and install the haproxy 
-1. At first login on LB server  ssh loki@stlb01
-
+```
 thor@jump_host ~$ ssh loki@stlb01
 loki@stlb01's password:Mischi3f
+```
 
+**2. Switch to  root user : sudo su -**
 
-2. Switch to  root user : sudo su -
-
+```
 [loki@stlb01 ~]$ sudo su -
 [sudo] password for loki:Mischi3f
+```
 
-3. install the haproxy : yum -y install haproxy
+**3. install the haproxy : yum -y install haproxy**
 
+```
 [root@stlb01 ~]# yum -y install haproxy
 Updating Subscription Management repositories.
 Unable to read consumer identity
@@ -144,14 +149,17 @@ Installed:
   haproxy-1.8.27-5.el8.x86_64                                                                                                                                                                 
 
 Complete!
+```
 
+**4. Edit the vi /etc/haproxy/haproxy.cfg   file and correct the changes as per below**
 
-4. Edit the vi /etc/haproxy/haproxy.cfg   file and correct the changes as per below
+```
 [root@stlb01 ~]# cat /etc/haproxy/haproxy.cfg |grep haproxy/stats
     stats socket /var/lib/haproxy/stats
 
 [root@stlb01 ~]# vi /etc/haproxy/haproxy.cfg
 [root@stlb01 ~]# cat /etc/haproxy/haproxy.cfg
+```
 #---------------------------------------------------------------------
 # Example configuration for a possible web application.  See the
 # full configuration options online.
@@ -242,12 +250,15 @@ backend app
     server  stapp02 172.16.238.11:8087 check
     server  stapp03 172.16.238.12:8087 check
 
-5. Validate the haproxy configuration file by running the below command
+**5. Validate the haproxy configuration file by running the below command**
 
+```
 [root@stlb01 ~]# haproxy -f /etc/haproxy/haproxy.cfg
+```
 
-6. Enable and start the haproxy service
+**6. Enable and start the haproxy service**
 
+```
 [root@stlb01 ~]# systemctl enable haproxy
 Created symlink /etc/systemd/system/multi-user.target.wants/haproxy.service → /usr/lib/systemd/system/haproxy.service.
 
@@ -280,10 +291,11 @@ Aug 30 18:51:14 stlb01.stratos.xfusioncorp.com systemd[1]: haproxy.service: Fail
 [root@stlb01 ~]# logout
 [loki@stlb01 ~]$ logout
 Connection to stlb01 closed.
+```
 
+**7. Validate the task  from jump server** 
 
-7. Validate the task  from jump server 
-
+```
 thor@jump_host ~$ curl 172.16.238.14:80
 Welcome to xFusionCorp Industries!
 
@@ -296,7 +308,7 @@ Welcome to xFusionCorp Industries!
 thor@jump_host ~$ curl 172.16.238.12:8087
 
 Welcome to xFusionCorp Industries!
-
+```
 
 
 

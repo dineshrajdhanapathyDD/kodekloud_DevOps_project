@@ -1,33 +1,38 @@
 
 
-Questions:
-(xFusionCorp Industries) has an application running on (Nautlitus) infrastructure in Stratos Datacenter. The monitoring tool recognised that there is an issue with the (haproxy) service on (LBR) server. That needs to fixed to make the application work properly.
+## Questions:
 
-Troubleshoot and fix the issue, and make sure (haproxy) service is running on (Nautilus LBR) server. Once fixed, make sure you are able to access the website using (StaticApp) button on the top bar.
+`xFusionCorp Industries` has an application running on `Nautlitus` infrastructure in Stratos Datacenter. The monitoring tool recognised that there is an issue with the `haproxy` service on `LBR` server. That needs to fixed to make the application work properly.
+
+Troubleshoot and fix the issue, and make sure `haproxy` service is running on `Nautilus LBR` server. Once fixed, make sure you are able to access the website using `StaticApp` button on the top bar.
 
 
-Solution:  
-1. At first login to one of the App server  &  Switch to  root user
+## Solution:
 
+**1. At first login to one of the App server  &  Switch to  root user**
+
+```
 thor@jump_host ~$ ssh loki@stlb01
 loki@stlb01's password: Mischi3f
 
 [loki@stlb01 ~]$ sudo su -
 [sudo] password for loki: Mischi3f
+```
 
+**2.  Verify the status of haproxy service**
 
-2.  Verify the status of haproxy service 
-
+```
 [root@stlb01 ~]# systemctl status haproxy
 ● haproxy.service - HAProxy Load Balancer
    Loaded: loaded (/usr/lib/systemd/system/haproxy.service; disabled; vendor preset: disabled)
    Active: inactive (dead)
 
 Aug 31 11:14:16 stlb01.stratos.xfusioncorp.com systemd[1]: Collecting haproxy.service
+```
 
+**3. First validate the existing the haproxy config file using the below command**   
 
-3. First validate the existing the haproxy config file using the below command   
-
+```
 [root@stlb01 ~]# haproxy -c -f /etc/haproxy/haproxy.cfg
 [ALERT] 242/111456 (359) : Proxy 'main': unable to find required default_backend: 'app'.
 [ALERT] 242/111456 (359) : Fatal errors found in configuration.
@@ -37,10 +42,11 @@ Aug 31 11:14:16 stlb01.stratos.xfusioncorp.com systemd[1]: Collecting haproxy.se
     server  app1 stapp01:8087 check
     server  app2 stapp02:8087 check
     server  app3 stapp03:8087 check
+```
 
+**4. Correct the typo error in the file haproxy.cfg** 
 
-4. Correct the typo error in the file haproxy.cfg  
-
+```
 [root@stlb01 ~]# vi /etc/haproxy/haproxy.cfg
 [root@stlb01 ~]# cat /etc/haproxy/haproxy.cfg
 global
@@ -103,16 +109,18 @@ backend app
     server  app1 stapp01:8087 check
     server  app2 stapp02:8087 check
     server  app3 stapp03:8087 check
+```
 
+**5. After changes  validate the existing the haproxy config file**
 
-5. After changes  validate the existing the haproxy config file
-
+```
 [root@stlb01 ~]# haproxy -c -f /etc/haproxy/haproxy.cfg
 Configuration file is valid
+```
 
+**6. Start service &   Check service status**
 
-6. Start service &   Check service status
-
+```
 [root@stlb01 ~]# systemctl start haproxy
 [root@stlb01 ~]# systemctl status haproxy
 ● haproxy.service - HAProxy Load Balancer
@@ -131,9 +139,9 @@ Aug 31 11:18:51 stlb01.stratos.xfusioncorp.com systemd[1]: Job haproxy.service/s
 Aug 31 11:18:51 stlb01.stratos.xfusioncorp.com systemd[1]: Started HAProxy Load Balancer.
 Aug 31 11:18:51 stlb01.stratos.xfusioncorp.com systemd[368]: Executing: /usr/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
 Aug 31 11:18:51 stlb01.stratos.xfusioncorp.com haproxy-systemd-wrapper[368]: haproxy-systemd-wrapper: executing /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -Ds
+```
 
-
-7. Click on Finish & Confirm to complete the task successful
+**7. Click on `Finish` & `Confirm` to complete the task successful**
 
 
 
