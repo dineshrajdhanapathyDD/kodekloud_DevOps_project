@@ -1,13 +1,17 @@
 
 
-Questions:
-Nautilus DevOps team is testing some applications deployment on some of the application servers. They need to deploy a nginx container on (Application Server 3). Please complete the task as per details given below:
+## Questions:
+
+Nautilus DevOps team is testing some applications deployment on some of the application servers. They need to deploy a nginx container on `Application Server 3`. Please complete the task as per details given below:
 
 
-On (Application Server 3) create a container named (nginx_3) using image (nginx) with (alpine) tag and make sure container is in (running) state.
+On `Application Server 3` create a container named `nginx_3` using image `nginx` with `alpine` tag and make sure container is in `running` state.
 
-Solutions:
-1. Login on app server given in task and switch the root.
+## Solutions:
+
+**1. Login on app server given in task and switch the root.**
+
+```
 thor@jump_host ~$ ssh banner@stapp03
 banner@stapp03's password: BigGr33n 
 
@@ -20,9 +24,11 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 [root@stapp02 ~]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+```
 
+**2. As per task pull the image and run the container**
 
-2. As per task pull the image and run the container
+```
 [root@stapp02 ~]# docker run -d --name nginx_2 -p 8080:80 nginx:alpine
 Unable to find image 'nginx:alpine' locally
 alpine: Pulling from library/nginx
@@ -37,8 +43,11 @@ c8794a7158bf: Pull complete
 Digest: sha256:2d194184b067db3598771b4cf326cfe6ad5051937ba1132b8b7d4b0184e0d0a6
 Status: Downloaded newer image for nginx:alpine
 fd955b76cffb15c4bd8750c1c938abebe4ce364ab8adfe652b65b6d1194c9c54
+```
 
-3. Confirm docker container is running
+**3. Confirm docker container is running**
+
+```
 [root@stapp02 ~]# docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                  NAMES
 fd955b76cffb        nginx:alpine        "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:8080->80/tcp   nginx_2
@@ -46,8 +55,11 @@ fd955b76cffb        nginx:alpine        "/docker-entrypoint.…"   About a minut
 [root@stapp02 ~]# docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 nginx               alpine              4937520ae206        6 weeks ago         41.4MB
+```
 
-4. Run the docker in locallhost
+**4. Run the docker in locallhost**
+
+```
 [root@stapp02 ~]# curl http://localhost:8080
 <!DOCTYPE html>
 <html>
@@ -72,6 +84,7 @@ Commercial support is available at
 <p><em>Thank you for using nginx.</em></p>
 </body>
 </html>
+```
 
+**5.  Click on `Finish` & `Confirm` to complete the task successfully**
 
-5.  Click on Finish & Confirm to complete the task successfully
