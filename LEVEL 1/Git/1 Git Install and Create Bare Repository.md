@@ -1,23 +1,27 @@
 
 
-Questions:
-The Nautilus development team shared requirements with the DevOps team regarding new application development.—specifically, they want to set up a Git repository for that project. Create a Git repository on (Storage server) in Stratos DC as per details given below:
+## Questions:
+The Nautilus development team shared requirements with the DevOps team regarding new application development.—specifically, they want to set up a Git repository for that project. Create a Git repository on `Storage server` in Stratos DC as per details given below:
 
-1.Install (git) package using (yum) on (Storage server)
+1.Install `git` package using `yum` on `Storage server`
 
-2.After that create a bare repository (/opt/news.git) {make sure to use exact name}.
+2.After that create a bare repository `/opt/news.git` {make sure to use exact name}.
 
 
-Solution:  
-1. At first login on storage server  & switch to root user
+## Solution:  
 
+**1. At first login on storage server  & switch to root user**
+
+```
 thor@jump_host /$ ssh natasha@ststor01
 natasha@ststor01's password: Bl@kW
 [natasha@ststor01 ~]$ sudo su -
 [sudo] password for natasha: Bl@kW
+```
 
-2. Install git 
+**2. Install git** 
 
+```
 [root@ststor01 ~]# yum install -y git
 
 Updating Subscription Management repositories.
@@ -30,10 +34,11 @@ Package git-2.39.3-1.el8_8.x86_64 is already installed.
 Dependencies resolved.
 Nothing to do.
 Complete!
+```
 
+**3. Verify Installed git version & path where git need to initiated**
 
-3. Verify Installed git version & path where git need to initiated
-
+```
 [root@ststor01 ~]# rpm -qa |grep git
 git-core-doc-2.39.3-1.el8_8.noarch
 crypto-policies-20221215-1.gitece0092.el8.noarch
@@ -41,9 +46,11 @@ git-core-2.39.3-1.el8_8.x86_64
 libnsl2-1.2.0-2.20180605git4a062cf.el8.x86_64
 git-2.39.3-1.el8_8.x86_64
 crypto-policies-scripts-20221215-1.gitece0092.el8.noarch
+```
 
-4. Make sure you init  bare  repo in given path 
+**4. Make sure you init  bare  repo in given path**
 
+```
 [root@ststor01 ~]# cd /opt/
 [root@ststor01 opt]# git init  --bare news.git
 hint: Using 'master' as the name for the initial branch. This default branch name
@@ -60,9 +67,9 @@ Initialized empty Git repository in /opt/news.git/
 
 [root@ststor01 opt]# git status
 fatal: not a git repository (or any of the parent directories): .git
+```
 
-
-5. Click on Finish & Confirm to complete the task successful
+**5. Click on `Finish` & `Confirm` to complete the task successful**
 
 
 
