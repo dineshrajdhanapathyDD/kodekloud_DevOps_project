@@ -1,25 +1,29 @@
 
 
-Questions:
+## Questions:
+
 We deployed a Nginx and PHP-FPM based setup on Kubernetes cluster last week and it had been working fine so far. This morning one of the team members made a change somewhere which caused some issues, and it stopped working. Please look into the issue and fix it:
 
-The pod name is (nginx-phpfpm) and configmap name is (nginx-config). Figure out the issue and fix the same.
+The pod name is `nginx-phpfpm` and configmap name is `nginx-config`. Figure out the issue and fix the same.
 
-Once issue is fixed, copy (/home/thor/index.php) file from the (jump host) to the (nginx-container) under nginx document root and you should be able to access the (website) using Website button on top bar.
+Once issue is fixed, copy `/home/thor/index.php` file from the `jump host` to the `nginx-container` under nginx document root and you should be able to access the `website` using Website button on top bar.
 
-Note: The (kubectl) utility on (jump_host) has been configured to work with the kubernetes cluster.
+Note: The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
 
-Solution:  
-1. Check existing running pods
+## Solution:
 
+**1. Check existing running pods**
+
+```
 thor@jump_host ~$ kubectl get pods
 NAME           READY   STATUS    RESTARTS   AGE
 nginx-phpfpm   2/2     Running   0          4m5s
+```
 
+**2. check the shared volume path in existing config map** 
 
- 2. check the shared volume path in existing config map 
-
+```
 thor@jump_host ~$ kubectl get configmap
 NAME               DATA   AGE
 kube-root-ca.crt   1      11m
@@ -63,10 +67,11 @@ BinaryData
 ====
 
 Events:  <none>
+```
 
+**3. Get the configuration in the YAML file from the running pod**
 
-3. Get the configuration in the YAML file from the running pod 
-
+```
 thor@jump_host ~$ kubectl get pod nginx-phpfpm -o yaml  > /tmp/nginx.yaml
 
 thor@jump_host ~$ ls /tmp/
@@ -210,11 +215,12 @@ status:
   startTime: "2023-08-25T05:43:48Z"
 
 
-refre path - [{"mountPath":"/usr/share/nginx/html","name":"shared-files"}, 
+refre path - {"mountPath":"/usr/share/nginx/html","name":"shared-files"}, 
+```
 
+**4. Edit the nginx.yaml file and changed ‘/usr/share/nginx/html’ to ‘/var/www/html’ in 3 places.**
 
-4. Edit the nginx.yaml file and changed ‘/usr/share/nginx/html’ to ‘/var/www/html’ in 3 places.
-
+```
 thor@jump_host ~$ vi /tmp/nginx.yaml
 thor@jump_host ~$ cat /tmp/nginx.yaml
 apiVersion: v1
@@ -352,32 +358,36 @@ status:
   - ip: 10.244.0.5
   qosClass: BestEffort
   startTime: "2023-08-25T05:43:48Z"
+```
 
+**5. Post changes the mount path run below command to replace the running pods**   
 
-5. Post changes the mount path run below command to replace the running pods   
-
+```
 thor@jump_host ~$ kubectl replace -f /tmp/nginx.yaml --force
 pod "nginx-phpfpm" deleted
 pod/nginx-phpfpm replaced
+```
 
+**6.  Wait for pods to get running status.**
 
-6.  Wait for pods to get running status.
-
+```
 thor@jump_host ~$ kubectl get pods
 NAME           READY   STATUS    RESTARTS   AGE
 nginx-phpfpm   2/2     Running   0          2m9s
+```
 
+**7. Now copy the index.php file as per the task.**  
 
-7. Now copy the index.php file as per the task.  
-
+```
 thor@jump_host ~$ ls /home/thor/
 index.php
 
 thor@jump_host ~$ kubectl cp  /home/thor/index.php  nginx-phpfpm:/var/www/html -c nginx-container
+```
 
+**8. validate the task by curl the Nginx port**
 
-8. validate the task by curl the Nginx port 
-
+```
 thor@jump_host ~$ kubectl exec -it nginx-phpfpm -c nginx-container  -- curl -I  http://localhost:8099
 HTTP/1.1 200 OK
 Server: nginx/1.25.2
@@ -385,6 +395,6 @@ Date: Fri, 25 Aug 2023 06:20:22 GMT
 Content-Type: text/html; charset=UTF-8
 Connection: keep-alive
 X-Powered-By: PHP/7.2.34
+```
 
-
-9.  Click on Finish & Confirm to complete the task successfully
+**9.  Click on `Finish` & `Confirm` to complete the task successfully**

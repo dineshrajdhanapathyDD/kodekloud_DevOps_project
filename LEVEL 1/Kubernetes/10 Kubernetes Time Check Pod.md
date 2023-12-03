@@ -1,5 +1,6 @@
 
-Questions:
+## Questions:
+
 The Nautilus DevOps team want to create a time check pod in a particular Kubernetes namespace and record the logs. This might be initially used only for testing purposes, but later can be implemented in an existing cluster. Please find more details below about the task and perform it.
 
 
@@ -15,9 +16,11 @@ Create a volume log-volume and mount the same on /opt/itadmin/time within the co
 Note: The kubectl utility on jump_host has been configured to work with the kubernetes cluster.
 
 
-Solution:  
+## Solution:  
 
-1. At first  kubectl  utility configure and working from jump server, run below commands
+**1. At first  kubectl  utility configure and working from jump server, run below commands**
+
+```
 thor@jump_host ~$ kubectl get namespace
 NAME                 STATUS   AGE
 default              Active   31m
@@ -28,19 +31,18 @@ local-path-storage   Active   31mce
 
 thor@jump_host ~$ kubectl get pods
 No resources found in default namespace.
+```
 
-
-2. create a new namespace  as per the given in the task 
+**2. create a new namespace  as per the given in the task** 
   
+```  
 thor@jump_host ~$ kubectl create namespace devops
 namespace/devops created
+```
 
+**3.  Create a YAML  file with all the parameters, you can copy from GitLab**
 
-3.  Create a YAML  file with all the parameters, you can copy from GitLab
-
-    (https://gitlab.com/nb-tech-support/devops.git)
-
-
+```
 thor@jump_host ~$ vi /tmp/time.yaml
 
 open terminal paste:
@@ -113,20 +115,22 @@ spec:
 exit :wq
 
 thor@jump_host /$ cat /tmp/time.yaml
+```
 
+**4.  Run the below command to create a pod**
 
-4.  Run the below command to create a pod
-
+```
 thor@jump_host ~$ kubectl create -f /tmp/time.yaml
 configmap/time-config created
 pod/time-check created
+```
 
-
-5.  Wait for  pods to get running status
+**5.  Wait for  pods to get running status**
       
-
+```
 thor@jump_host ~$ kubectl get pods -n devops
 NAME         READY   STATUS    RESTARTS   AGE
 time-check   1/1     Running   0          36s
+```
 
-6.  Click on Finish & Confirm to complete the task successfully
+**6.  Click on `Finish` & `Confirm` to complete the task successfully**

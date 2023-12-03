@@ -1,16 +1,19 @@
 
 
-Questions:
+## Questions:
+
 This morning the Nautilus DevOps team rolled out a new release for one of the applications. Recently one of the customers logged a complaint which seems to be about a bug related to the recent release. Therefore, the team wants to rollback the recent release.
 
-There is a deployment named (nginx-deployment); roll it back to the previous revision.
+There is a deployment named `nginx-deployment`; roll it back to the previous revision.
 
-Note: The (kubectl) utility on (jump_host) has been configured to work with the kubernetes cluster.
+Note: The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
 
- Solution : 
-1. At first  check existing deployment and pods running status  
+## Solution : 
 
+**1. At first  check existing deployment and pods running status**  
+
+```
 thor@jump_host ~$ kubectl get deploy
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   3/3     3            3           89s
@@ -63,17 +66,18 @@ Events:
   Normal  ScalingReplicaSet  71s   deployment-controller  Scaled down replica set nginx-deployment-989f57c54 to 1 from 2
   Normal  ScalingReplicaSet  71s   deployment-controller  Scaled up replica set nginx-deployment-698959d995 to 3 from 2
   Normal  ScalingReplicaSet  68s   deployment-controller  Scaled down replica set nginx-deployment-989f57c54 to 0 from 1
+```
 
+**2. Run the below command to revert to an earlier release**
 
-
-2. Run the below command to revert to an earlier release 
-
+```
 thor@jump_host ~$ kubectl rollout undo deployment  nginx-deployment
 deployment.apps/nginx-deployment rolled back
+```
 
+**3. Wait for deployment & pods to get running status**
 
-3. Wait for deployment & pods to get running status
-
+```
 thor@jump_host ~$ kubectl get pods
 NAME                               READY   STATUS    RESTARTS   AGE
 nginx-deployment-989f57c54-6q47v   1/1     Running   0          9s
@@ -88,16 +92,16 @@ NAME                               READY   STATUS    RESTARTS   AGE
 nginx-deployment-989f57c54-6q47v   1/1     Running   0          3m20s
 nginx-deployment-989f57c54-gf4fm   1/1     Running   0          3m22s
 nginx-deployment-989f57c54-jxmqq   1/1     Running   0          3m16s
+```
 
+**4. Validate the task by running the below command**
 
-
-4. Validate the task by running the below command
-
+```
 thor@jump_host ~$ kubectl rollout status deployment  nginx-deployment
 deployment "nginx-deployment" successfully rolled out
+```
 
-
-5.  Click on Finish & Confirm to complete the task successful
+**5.  Click on `Finish` & `Confirm` to complete the task successful**
 
 
 

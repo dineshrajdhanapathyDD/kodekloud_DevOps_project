@@ -1,18 +1,20 @@
 
 
-Questions:
+## Questions:
+
 The Nautilus DevOps team has started practicing some pods, and services deployment on Kubernetes platform, as they are planning to migrate most of their applications on Kubernetes. Recently one of the team members has been assigned a task to create a deployment as per details mentioned below:
 
 
-Create a deployment named (httpd) to deploy the application (httpd) using the image (httpd:latest) (remember to mention the tag as well)
+Create a deployment named `httpd` to deploy the application `httpd` using the image `httpd:latest` (remember to mention the tag as well)
 
-Note: The (kubectl) utility on (jump_host) has been configured to work with the kubernetes cluster.
+Note: The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
 
-Solution:
+## Solution:
 
-1. At first  kubectl  utility configure and working from jump server, run below commands  
+**1. At first  kubectl  utility configure and working from jump server, run below commands**
 
+```
 thor@jump_host ~$ kubectl get deploy
 No resources found in default namespace.
 
@@ -23,17 +25,18 @@ kube-node-lease      Active   9m44s
 kube-public          Active   9m44s
 kube-system          Active   9m44s
 local-path-storage   Active   9m36s
+```
 
+**2.  Create deploy & and run image as per the task request**
 
-2.  Create deploy & and run image as per the task request
-
+```
 thor@jump_host ~$ kubectl create deploy httpd --image httpd:latest
 deployment.apps/httpd created
+```
 
+**3.  Validate the task by running below commands**
 
-
-3.  Validate the task by running below commands
-
+```
 thor@jump_host ~$ kubectl get deploy
 NAME    READY   UP-TO-DATE   AVAILABLE   AGE
 httpd   1/1     1            1           27s
@@ -96,5 +99,6 @@ Events:
   Normal  Pulled     76s   kubelet            Successfully pulled image "httpd:latest" in 14.881488286s (14.881506619s including waiting)
   Normal  Created    76s   kubelet            Created container httpd
   Normal  Started    75s   kubelet            Started container httpd
+```
 
-4.  Click on Finish & Confirm to complete the task successful
+**4.  Click on `Finish` & `Confirm` to complete the task successful**

@@ -1,28 +1,32 @@
 
 
-Questions:
+## Questions:
+
 One of the junior DevOps team members was working on to deploy a stack on Kubernetes cluster. Somehow the pod is not coming up and its failing with some errors. We need to fix this as soon as possible. Please look into it.
 
 
-There is a pod named (webserver) and the container under it is named as (nginx-container). It is using image (nginx:latest)
+There is a pod named `webserver` and the container under it is named as `nginx-container`. It is using image `nginx:latest`
 
-There is a sidecar container as well named (sidecar-container) which is using (ubuntu:latest) image.
+There is a sidecar container as well named `sidecar-container` which is using `ubuntu:latest` image.
 
-Look into the issue and fix it, make sure pod is in (running) state and you are able to access the app.
+Look into the issue and fix it, make sure pod is in `running` state and you are able to access the app.
 
-Note: The (kubectl) utility on (jump_host) has been configured to work with the kubernetes cluster.
+Note: The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
 
-Solution:  
-1. At first  kubectl  utility configure and working from jump server, run below commands
+## Solution: 
 
+**1. At first  kubectl  utility configure and working from jump server, run below commands**
+
+```
 thor@jump_host ~$ kubectl get pods
 NAME        READY   STATUS             RESTARTS   AGE
 webserver   1/2     ImagePullBackOff   0          3m2s
+```
 
+**2. To identify the error run below command** 
 
-2. To identify the error run below command 
-
+```
 thor@jump_host ~$ kubectl describe pod webserver
 Name:             webserver
 Namespace:        default
@@ -103,20 +107,23 @@ Events:
   Warning  Failed     3m8s (x3 over 3m52s)   kubelet            Error: ErrImagePull
   Normal   BackOff    2m29s (x6 over 3m47s)  kubelet            Back-off pulling image "nginx:latests"
   Warning  Failed     2m29s (x6 over 3m47s)  kubelet            Error: ImagePullBackOff
+```
 
+**3.  To resolve the images issue edit the pod and do the changes**
 
-3.  To resolve the images issue edit the pod and do the changes
-
+```
 thor@jump_host ~$ kubectl edit pod webserver
 pod/webserver edited
 
 note:  Image:  nginx:latests   ->  Image: nginx:latest
+```
 
-4.  Wait for  pods to get running status
+**4.  Wait for  pods to get running status**
 
+```
 thor@jump_host ~$ kubectl get pods
 NAME        READY   STATUS    RESTARTS   AGE
 webserver   2/2     Running   0          11m
+```
 
-
-5.  Click on Finish & Confirm to complete the task successful.
+**5.  Click on `Finish` & `Confirm` to complete the task successful.**

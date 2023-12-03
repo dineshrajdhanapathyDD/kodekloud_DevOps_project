@@ -1,23 +1,26 @@
 
 
-Questions:
+## Questions:
+
 There is an application deployed on Kubernetes cluster. Recently, the Nautilus application development team developed a new version of the application that needs to be deployed now. As per new updates some new changes need to be made in this existing setup. So update the deployment and service as per details mentioned below:
 
 
-We already have a deployment named (nginx-deployment) and service named (nginx-service). Some changes need to be made in this deployment and service, make sure not to delete the deployment and service.
+We already have a deployment named `nginx-deployment` and service named `nginx-service`. Some changes need to be made in this deployment and service, make sure not to delete the deployment and service.
 
-1.) Change the service nodeport from (30008) to (32165)
+1. Change the service nodeport from `30008` to `32165`
 
-2.) Change the replicas count from (1) to (5)
+2. Change the replicas count from `1` to `5`
 
-3.) Change the image from (nginx:1.18) to (nginx:latest)
+3. Change the image from `nginx:1.18` to `nginx:latest`
 
-Note: The (kubectl) utility on (jump_host) has been configured to work with the kubernetes cluster.
+Note: The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
 
-Solution:  
-1. At first  run below commands to check  the existing setup    
+## Solution: 
 
+**1. At first  run below commands to check  the existing setup**    
+
+```
 thor@jump_host ~$ kubectl get deploy
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   1/1     1            1           2m22s
@@ -30,11 +33,11 @@ nginx-service   NodePort    10.96.230.21   <none>        80:30008/TCP   2m45s
 thor@jump_host ~$ kubectl get pods
 NAME                                READY   STATUS    RESTARTS   AGE
 nginx-deployment-58cf54c7f6-rj8km   1/1     Running   0          3m12s
+```
 
+**2. Edit the services as per the task and change the port no**
 
-2. Edit the services as per the task and change the port no
-
-
+```
 thor@jump_host ~$ kubectl edit service nginx-service
 service/nginx-service edited
 
@@ -82,10 +85,11 @@ thor@jump_host ~$ kubectl get service
 NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
 kubernetes      ClusterIP   10.96.0.1      <none>        443/TCP        11m
 nginx-service   NodePort    10.96.230.21   <none>        80:32165/TCP   9m18s
+```
 
+**3. Edit the deployment and do the changes as per the task**
 
-3. Edit the deployment and do the changes as per the task 
-
+```
 thor@jump_host ~$ kubectl edit deploy nginx-deployment
 deployment.apps/nginx-deployment edited
 
@@ -174,10 +178,11 @@ nginx-deployment-854ff588b7-c7p98   1/1     Running   0          64s
 nginx-deployment-854ff588b7-mmtvb   1/1     Running   0          30s
 nginx-deployment-854ff588b7-wd8vv   1/1     Running   0          64s
 nginx-deployment-854ff588b7-xrdlm   1/1     Running   0          64s
+```
 
+**4.  Wait for  deployment & pods to get ready & running status**
 
-4.  Wait for  deployment & pods to get ready & running status
-
+```
 thor@jump_host ~$ kubectl get deploy
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
 nginx-deployment   5/5     5            5           15m
@@ -189,7 +194,7 @@ nginx-deployment-854ff588b7-c7p98   1/1     Running   0          2m13s
 nginx-deployment-854ff588b7-mmtvb   1/1     Running   0          99s
 nginx-deployment-854ff588b7-wd8vv   1/1     Running   0          2m13s
 nginx-deployment-854ff588b7-xrdlm   1/1     Running   0          2m13s
+```
 
-
-5.  Click on Finish & Confirm to complete the task successful
+**5.  Click on `Finish` & `Confirm` to complete the task successful**
 
