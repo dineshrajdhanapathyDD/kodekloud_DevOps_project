@@ -1,22 +1,25 @@
 
 
-Questions:
-The DevOps team of xFusionCorp Industries is planning to setup some CI/CD pipelines. After several meetings they have decided to use Jenkins server. So, we need to setup a (Jenkins Server) as soon as possible. Please complete the task as per requirements mentioned below:
+## Questions:
 
-1. Install (jenkins) on jenkins server using (yum) utility only, and start its (service). You might face timeout issue while starting the Jenkins service, please refer this link for help.
+The DevOps team of xFusionCorp Industries is planning to setup some CI/CD pipelines. After several meetings they have decided to use Jenkins server. So, we need to setup a `Jenkins Server` as soon as possible. Please complete the task as per requirements mentioned below:
 
-2. Jenkin's admin user name should be (theadmin), password should be (Adm!n321), full name should be (Yousuf) and email should be (yousuf@jenkins.stratos.xfusioncorp.com).
+1. Install `jenkins` on jenkins server using `yum` utility only, and start its `service`. You might face timeout issue while starting the Jenkins service, please refer this link for help.
+
+2. Jenkin's admin user name should be `theadmin`, password should be `Adm!n321`, full name should be `Yousuf` and email should be `yousuf@jenkins.stratos.xfusioncorp.com`.
 
 Note:
 
-1. For this task ssh into (jenkins) server using user (root) and password (S3curePass) from (jump host).
+1. For this task ssh into `jenkins` server using user `root` and password `S3curePass` from `jump host`.
 
-2. To complete the (jenkins installation) after installing packages and after starting the jenkins service, click on the (Jenkins) button on the top bar.
+2. To complete the `jenkins installation` after installing packages and after starting the jenkins service, click on the `Jenkins` button on the top bar.
 
 
-Solution:  
+## Solution:  
 
-1. Login on the jenkins server as a root 
+**1. Login on the jenkins server as a root**
+
+```
 thor@jump_host ~$ ssh root@jenkins
 root@jenkins's password: S3curePass
 
@@ -36,9 +39,11 @@ Saving to: ‘/etc/yum.repos.d/jenkins.repo’
 2023-08-08 07:57:57 (7.92 MB/s) - ‘/etc/yum.repos.d/jenkins.repo’ saved [85/85]
 
 [root@jenkins ~]# sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+```
 
-2. Add required dependencies for the jenkins package
+**2. Add required dependencies for the jenkins package**
 
+```
 [root@jenkins ~]# sudo dnf upgrade
 Failed loading plugin "subscription-manager": cannot import name 'which'
 Failed loading plugin "upload-profile": cannot import name 'which'
@@ -56,8 +61,11 @@ Package java-17-openjdk-1:17.0.8.0.7-2.el8.x86_64 is already installed.
 Dependencies resolved.
 Nothing to do.
 Complete!
+```
 
-3. start the jenkins service:
+**3. start the jenkins service:**
+
+```
 [root@jenkins ~]# service jenkins start
 Starting jenkins (via systemctl):                          [  OK  ]
 [root@jenkins ~]# service jenkins status
@@ -80,39 +88,10 @@ Instance Configuration:
 https://8080-port-228d0ad743964afd.labs.kodekloud.com/
 
 Jenkins is ready!
+```
 
-4. Click on Finish & Confirm to complete the task successfully
-
-
-
-
-error found: 
-
-- package 'jenkins' is not installed or service 'jenkins' is not running on jenkins server
-ERROR test_jenkins_installation.py - AssertionError: - package 'jenkins' is n...
+**4. Click on `Finish` & `Confirm` to complete the task successfully**
 
 
-know the root :
-
-
-[root@jenkins ~]# cat /etc/*release  //Ubuntu 16.04
-CentOS Stream release 8
-NAME="CentOS Stream"
-VERSION="8"
-ID="centos"
-ID_LIKE="rhel fedora"
-VERSION_ID="8"
-PLATFORM_ID="platform:el8"
-PRETTY_NAME="CentOS Stream 8"
-ANSI_COLOR="0;31"
-CPE_NAME="cpe:/o:centos:centos:8"
-HOME_URL="https://centos.org/"
-BUG_REPORT_URL="https://bugzilla.redhat.com/"
-REDHAT_SUPPORT_PRODUCT="Red Hat Enterprise Linux 8"
-REDHAT_SUPPORT_PRODUCT_VERSION="CentOS Stream"
-CentOS Stream release 8
-CentOS Stream release 8
-cat: //Ubuntu: No such file or directory
-cat: 16.04: No such file or directory.
 
 

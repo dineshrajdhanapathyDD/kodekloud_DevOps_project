@@ -1,61 +1,72 @@
 
 
-Questions:
+## Questions:
 Some new requirements have come up to install and configure some packages on the Nautilus infrastructure under Stratos Datacenter. The Nautilus DevOps team installed and configured a new Jenkins server so they wanted to create a Jenkins job to automate this task. Find below more details and complete the task accordingly:
 
-Click on the (Jenkins) button on the top bar to access the Jenkins UI. Login using username (admin) and (Adm!n321) password.
+Click on the Jenkins button on the top bar to access the Jenkins UI. Login using username `admin` and `Adm!n321` password.
 
-Create a Jenkins job named (install-packages) and configure it to accomplish below given tasks.
+Create a Jenkins job named `install-packages` and configure it to accomplish below given tasks.
 
-Add a string parameter named (PACKAGE).
-Configure it to install a package on the (storage server) in (Stratos Datacenter) provided to the ($PACKAGE) parameter.
+Add a string parameter named `PACKAGE`.
+Configure it to install a package on the `storage server` in `Stratos Datacenter` provided to the `$PACKAGE` parameter.
 
 Note:
 
-1. You might need to install some plugins and restart Jenkins service. So, we recommend clicking on (Restart Jenkins when installation is complete and no jobs are running) on plugin installation/update page i.e (update centre). Also some times Jenkins UI gets stuck when Jenkins service restarts in the back end so in such case please make sure to refresh the UI page.
+1. You might need to install some plugins and restart Jenkins service. So, we recommend clicking on (Restart Jenkins when installation is complete and no jobs are running) on plugin installation/update page i.e `update centre`. Also some times Jenkins UI gets stuck when Jenkins service restarts in the back end so in such case please make sure to refresh the UI page.
 
 2. Make sure Jenkins job passes even on repetitive runs as validation may try to build the job multiple times.
 
 3. For these kind of scenarios requiring changes to be done in a web UI, please take screenshots so that you can share it with us for review in case your task is marked incomplete. You may also consider using a screen recording software such as loom.com to record and share your work. 
 
 
-Solutions:
-1. connect with jenkins UI
-Click on the (Jenkins) button on the top bar to access the Jenkins UI. Login using username (admin) and (Adm!n321) password.
+## Solutions:
 
-2. create job
-Create a Jenkins job named (install-packages) and configure it to accomplish below given tasks.
+**1. connect with jenkins UI**
 
-3. add the plugins ssh, ssh credentials and credentials
+- Click on the Jenkins button on the top bar to access the Jenkins UI. Login using username `admin` and `Adm!n321` password.
 
-manage jenkins -> mange plugins-> add ssh, ssh credentials and credentials install the plugins -> restart the jenkins with username and password.
+**2. create job**
 
-4. create credentials 
+- Create a Jenkins job named `install-packages` and configure it to accomplish below given tasks.
+
+**3. add the plugins ssh, ssh credentials and credentials**
+
+- manage jenkins -> mange plugins-> add ssh, ssh credentials and credentials install the plugins -> restart the jenkins with username and password.
+
+**4. create credentials**
+
+```
 username - natasha
 password - Bl@kW
 id - ststor01
+```
 
-5. configure system in ssh remote host
+**5. configure system in ssh remote host**
 
+```
 hostname-> ststor01, Port -> 22, click add creds to natasha 
 then select pty checkbox. 
 Then click on check connection. 
 Once connection is established then go into Jobs
+```
 
-6. configure the created job 
+**6. configure the created job**
 
-Add a string parameter named (PACKAGE). then click save
+- Add a string parameter named `PACKAGE`. then click save
 
+```
 In Build Steps - Select the option Execute shell script on the remote host using ssh
 SSH site Box
 Command box - Pass the command below and  then save it
 echo Bl@kW | sudo -S yum install -y $PACKAGE
+```
 
-7.Build with parameter
-Run Build with Parameter then in PACKAGE Box
-Pass httpd or nginx
-click "build"
+**7.Build with parameter**
+- Run Build with Parameter then in PACKAGE Box
+- Pass httpd or nginx
+- click "build"
 
+```
 console output:
 Started by user admin
 Running as SYSTEM
@@ -371,22 +382,15 @@ Complete!
 [SSH] exit-status: 0
 
 Finished: SUCCESS
+```
+
+**8. Click on `Finish` & `Confirm` to complete the task successful.**
 
 
-8. Click on Finish & Confirm to complete the task successful.
 
 
 
 
-
-If Error message comes:
-
-Jenkins job is not configured to install the provided package on Storage server
-ERROR final_chk.py - AssertionError: Jenkins job is not configured to install...
-
-
-check this part of the task:
-check the build steps, ssh host remote setup, command and build with paramater once.
 
 
 
