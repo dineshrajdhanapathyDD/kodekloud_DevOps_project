@@ -1,21 +1,23 @@
 
 
-Questions:A new teammate has joined the Nautilus application development team, the application development team has asked the DevOps team to create a new user account for the new teammate on application server 2 in Stratos Datacenter. The task needs to be performed using Puppet only. You can find more details below about the task.
+## Questions:
+A new teammate has joined the Nautilus application development team, the application development team has asked the DevOps team to create a new user account for the new teammate on application `server 2` in Stratos Datacenter. The task needs to be performed using Puppet only. You can find more details below about the task.
 
 
 
-Create a Puppet programming file official.pp under /etc/puppetlabs/code/environments/production/manifests directory on master node i.e Jump Server, and using Puppet user resource add a user on all app servers as mentioned below:
+Create a Puppet programming file official.pp under `/etc/puppetlabs/code/environments/production/manifests` directory on master node i.e Jump Server, and using Puppet user resource add a user on all app servers as mentioned below:
 
-Create a user mariyam and set its UID to 1061 on Puppet agent nodes 2 i.e App Servers 2.
+Create a user mariyam and set its UID to `1061` on Puppet agent nodes 2 i.e App Servers 2.
 Notes: :- Please make sure to run the puppet agent test using sudo on agent nodes, otherwise you can face certificate issues. In that case you will have to clean the certificates first and then you will be able to run the puppet agent test.
 
 :- Before clicking on the Check button please make sure to verify puppet server and puppet agent services are up and running on the respective servers, also please make sure to run puppet agent test to apply/test the changes manually first.
 
 :- Please note that once lab is loaded, the puppet server service should start automatically on puppet master server, however it can take upto 2-3 minutes to start.
-solutions:
 
 
-new :
+## solutions:
+
+```
 thor@jump_host ~$ sudo su -
 [sudo] password for thor: mjolnir123
 
@@ -43,13 +45,17 @@ node 'stapp01.stratos.xfusioncorp.com', 'stapp02.stratos.xfusioncorp.com', 'stap
   include user_creator
 
 }
+```
 
+**2. Validate the puppet files by below command.**
 
-2. Validate the puppet files by below command.
+```
 root@jump_host /etc/puppetlabs/code/environments/production/manifests# puppet parser validate official.pp
+```
 
+**3. Login on all  App server**
 
-3. Login on all  App server
+```
 thor@jump_host ~$ ssh steve@stapp02
 The authenticity of host 'stapp02 (172.16.238.11)' can't be established.
 ECDSA key fingerprint is SHA256:QsfBXIQQDT5Xi69yYY4flEmEOkqHDxo/CfLq6yR31WU.
@@ -70,8 +76,11 @@ Administrator. It usually boils down to these three things:
 
 login app server and run below command to pull the configurations:
 [root@stapp02 ~]# cat /etc/passwd |grep mariyam
+```
 
-4. Run Puppet agent to pull the configuration from puppet server 
+**4. Run Puppet agent to pull the configuration from puppet server**
+
+```
 [root@stapp02 ~]# puppet agent -tv
 Info: Using configured environment 'production'
 Info: Retrieving pluginfacts
@@ -81,11 +90,14 @@ Info: Caching catalog for stapp02.stratos.xfusioncorp.com
 Info: Applying configuration version '1689441477'
 Notice: /Stage[main]/User_creator/User[mariyam]/ensure: created
 Notice: Applied catalog in 0.19 seconds
+```
 
-5. Validate the task by running
+**5. Validate the task by running**
+
+```
 [root@stapp02 ~]# cat /etc/passwd |grep mariyam
 mariyam:x:1061:1061::/home/mariyam:/bin/bash
-
+```
 
 
 

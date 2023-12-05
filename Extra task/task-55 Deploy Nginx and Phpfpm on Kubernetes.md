@@ -1,29 +1,29 @@
 
 
-Questions:
+## Questions:
 The Nautilus Application Development team is planning to deploy one of the php-based application on Kubernetes cluster. As per discussion with DevOps team they have decided to use nginx and phpfpm. Additionally, they shared some custom configuration requirements. Below you can find more details. Please complete the task as per requirements mentioned below:
 
 
 
-1) Create a service to expose this app, the service type must be NodePort, nodePort should be 30012.
+1) Create a service to expose this app, the service type must be NodePort, nodePort should be `30012`.
 
-2.) Create a config map nginx-config for nginx.conf as we want to add some custom settings for nginx.conf.
+2) Create a config map `nginx-config` for `nginx.conf` as we want to add some custom settings for `nginx.conf`.
 
-a) Change default port 80 to 8098 in nginx.conf.
+a. Change default port `80` to `8098` in nginx.conf.
 
-b) Change default document root /usr/share/nginx to /var/www/html in nginx.conf.
+b Change default document root `/usr/share/nginx` to `/var/www/html` in nginx.conf.
 
-c) Update directory index to index index.html index.htm index.php in nginx.conf.
+c Update directory index to index index.html index.htm index.php in nginx.conf.
 
-3.) Create a pod named nginx-phpfpm .
+3) Create a pod named nginx-phpfpm .
 
-b) Create a shared volume shared-files that will be used by both containers (nginx and phpfpm) also it should be a emptyDir volume.
+b Create a shared volume shared-files that will be used by both containers `nginx and phpfpm` also it should be a emptyDir volume.
 
-c) Map the ConfigMap we declared above as a volume for nginx container. Name the volume as nginx-config-volume, mount path should be /etc/nginx/nginx.conf and subPath should be nginx.conf
+c Map the ConfigMap we declared above as a volume for nginx container. Name the volume as nginx-config-volume, mount path should be `/etc/nginx/nginx.conf` and subPath should be nginx.conf
 
-d) Nginx container should be named as nginx-container and it should use nginx:latest image. PhpFPM container should be named as php-fpm-container and it should use php:7.3-fpm image.
+d Nginx container should be named as nginx-container and it should use nginx:latest image. PhpFPM container should be named as php-fpm-container and it should use php:7.3-fpm image.
 
-e) The shared volume shared-files should be mounted at /var/www/html location in both containers. Copy /opt/index.php from jump host to the nginx document root inside nginx container, once done you can access the app using App button on the top bar.
+e The shared volume shared-files should be mounted at `/var/www/html` location in both containers. Copy `/opt/index.php` from jump host to the nginx document root inside nginx container, once done you can access the app using App button on the top bar.
 
 Before clicking on finish button always make sure to check if all pods are in running state.
 
@@ -32,10 +32,11 @@ You can use any labels as per your choice.
 Note: The kubectl utility on jump_host has been configured to work with the kubernetes cluster.
 
 
-Solution:  
+## Solution:  
 
-1) Create a service to expose this app, the service type must be NodePort, nodePort should be 30012.
+**1. Create a service to expose this app, the service type must be NodePort, nodePort should be 30012.**
 
+```
 vi app-service.yaml
 
 apiVersion: v1
@@ -73,18 +74,18 @@ NAME               DATA   AGE
 kube-root-ca.crt   1      39m
 thor@jump_host ~$ kubectl get pods
 No resources found in default namespace.
+```
+
+**2. Create a config map nginx-config for nginx.conf as we want to add some custom settings for nginx.conf.**
 
 
-2.) Create a config map nginx-config for nginx.conf as we want to add some custom settings for nginx.conf.
+- Change default port 80 to 8098 in nginx.conf.
 
+- Change default document root /usr/share/nginx to /var/www/html in nginx.conf.
 
-a) Change default port 80 to 8098 in nginx.conf.
+- Update directory index to index index.html index.htm index.php in nginx.conf.
 
-b) Change default document root /usr/share/nginx to /var/www/html in nginx.conf.
-
-c) Update directory index to index index.html index.htm index.php in nginx.conf.
-
-
+```
 vi app-configmap.yaml
 
 apiVersion: v1
@@ -115,9 +116,9 @@ thor@jump_host ~$ kubectl get all
 NAME                    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 service/app-php-nginx   NodePort    10.96.157.187   <none>        8098:30012/TCP   2m44s
 service/kubernetes      ClusterIP   10.96.0.1       <none>        443/TCP          71m
+```
 
-
-3.) Create a pod named nginx-phpfpm .
+**3. Create a pod named nginx-phpfpm.**
 
 b) Create a shared volume shared-files that will be used by both containers (nginx and phpfpm) also it should be a emptyDir volume.
 
@@ -130,7 +131,7 @@ PhpFPM container should be named as php-fpm-container and it should use php:7.0-
 e) The shared volume shared-files should be mounted at /var/www/html location in both containers. 
 Copy /opt/index.php from jump host to the nginx document root inside nginx container, once done you can access the app using App button on the top bar.
 
-
+```
 vi app-deploy.yaml
 
 ---
@@ -171,10 +172,11 @@ Before clicking on finish button always make sure to check if all pods are in ru
 You can use any labels as per your choice.
 
 Note: The kubectl utility on jump_host has been configured to work with the kubernetes cluster.
+```
 
+**4.  Once  pod is running then copy the index.php to nginx-container.**
 
-4.  Once  pod is running then copy the index.php to nginx-container.
-
+```
 thor@jump_host ~$ kubectl cp /opt/index.php nginx-phpfpm:/var/www/html
 Defaulting container name to nginx-container.
 
@@ -182,10 +184,11 @@ thor@jump_host ~$ kubectl get configmap
 NAME               DATA   AGE
 kube-root-ca.crt   1      49m
 nginx-config       1      8m16s
+```
 
+**5.  Wait for pod running status**
 
-5.  Wait for pod running status 
-
+```
 thor@jump_host ~$ kubectl get pods
 NAME           READY   STATUS    RESTARTS   AGE
 nginx-phpfpm   2/2     Running   0          102s
@@ -266,17 +269,19 @@ Events:
   Normal  Pulled     96s   kubelet            Successfully pulled image "php:7.2-fpm" in 15.140948312s
   Normal  Created    96s   kubelet            Created container php-fpm-container
   Normal  Started    96s   kubelet            Started container php-fpm-container
+```
 
+**6. Validate the task by login on pod and run curl**
 
-6.      Validate the task by login on pod and run curl
-
+```
 thor@jump_host ~$ kubectl exec -it nginx-phpfpm -- /bin/bash
 Defaulting container name to nginx-container.
 Use 'kubectl describe pod/nginx-phpfpm -n default' to see all of the containers in this pod.
 root@nginx-phpfpm:/# echo "<?phpinfo();?>" > /var/www/html/index.php
 curl http://localhost:8098
+```
 
-7.  Click on Finish & Confirm to complete the task successful
+**7.  Click on `Finish` & `Confirm` to complete the task successful**
 
 
 
