@@ -1,22 +1,24 @@
 
 
-Questions:
-To stick with the security compliances, the Nautilus project team has decided to apply some restrictions on crontab access so that only allowed users can create/update the cron jobs. Limit crontab access to below specified users on (App Server 3).
+## Questions:
+To stick with the security compliances, the Nautilus project team has decided to apply some restrictions on crontab access so that only allowed users can `create/update` the cron jobs. Limit crontab access to below specified users on (App Server 3).
 
+Allow crontab access to `anita` user and deny the same to `rod` user.
 
+## solutions:
 
-Allow crontab access to (anita) user and deny the same to (rod) user.
-
-
-
-solutions:
-
+**1. At first scp the file to stapp03**
+```
 thor@jump_host ~$ ssh banner@stapp03
 banner@stapp03's password: BigGr33n
 
 [banner@stapp03 ~]$ sudo su -
 [sudo] password for banner: BigGr33n
+```
 
+**2. Find the crontabs**
+
+```
 [root@stapp03 ~]# rpm -qa |grep crontabs
 
 [root@stapp03 ~]# systemctl status crond
@@ -84,3 +86,4 @@ Do you want to retry the same edit? y
 [root@stapp03 ~]# ls -l /var/spool/cron/
 total 0
 -rw------- 1 root root 0 Jul 26 18:37 root
+```
