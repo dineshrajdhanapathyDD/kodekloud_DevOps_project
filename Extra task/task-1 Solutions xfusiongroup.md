@@ -62,13 +62,9 @@ Welcome To KodeKloud
 **5. Click on `Finish` & `Confirm` to complete the task successful**
 
 
-exit
-
-cd /tmp/ 
-
-sh xfusioncorp.sh
 
 
-Welcome To KodeKloud
+
+
 
 

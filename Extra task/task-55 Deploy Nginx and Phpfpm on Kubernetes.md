@@ -25,9 +25,9 @@ d Nginx container should be named as nginx-container and it should use nginx:lat
 
 e The shared volume shared-files should be mounted at `/var/www/html` location in both containers. Copy `/opt/index.php` from jump host to the nginx document root inside nginx container, once done you can access the app using App button on the top bar.
 
-Before clicking on finish button always make sure to check if all pods are in running state.
+- Before clicking on finish button always make sure to check if all pods are in running state.
 
-You can use any labels as per your choice.
+- You can use any labels as per your choice.
 
 Note: The kubectl utility on jump_host has been configured to work with the kubernetes cluster.
 
@@ -166,12 +166,6 @@ spec:
 thor@jump_host ~$ kubectl apply -f app-deploy.yaml
 pod/nginx-phpfpm created
 
-
-Before clicking on finish button always make sure to check if all pods are in running state.
-
-You can use any labels as per your choice.
-
-Note: The kubectl utility on jump_host has been configured to work with the kubernetes cluster.
 ```
 
 **4.  Once  pod is running then copy the index.php to nginx-container.**

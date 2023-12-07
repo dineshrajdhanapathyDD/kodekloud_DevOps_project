@@ -7,22 +7,26 @@ A new teammate has joined the Nautilus application development team, the applica
 
 Create a Puppet programming file official.pp under `/etc/puppetlabs/code/environments/production/manifests` directory on master node i.e Jump Server, and using Puppet user resource add a user on all app servers as mentioned below:
 
-Create a user mariyam and set its UID to `1061` on Puppet agent nodes 2 i.e App Servers 2.
-Notes: :- Please make sure to run the puppet agent test using sudo on agent nodes, otherwise you can face certificate issues. In that case you will have to clean the certificates first and then you will be able to run the puppet agent test.
+Create a user mariyam and set its UID to `1061` on Puppet agent nodes 2 i.e `App Servers 2`.
 
-:- Before clicking on the Check button please make sure to verify puppet server and puppet agent services are up and running on the respective servers, also please make sure to run puppet agent test to apply/test the changes manually first.
+Notes: 
+- Please make sure to run the puppet agent test using sudo on agent nodes, otherwise you can face certificate issues. In that case you will have to clean the certificates first and then you will be able to run the puppet agent test.
 
-:- Please note that once lab is loaded, the puppet server service should start automatically on puppet master server, however it can take upto 2-3 minutes to start.
+- Before clicking on the Check button please make sure to verify puppet server and puppet agent services are up and running on the respective servers, also please make sure to run puppet agent test to apply/test the changes manually first.
+
+- Please note that once lab is loaded, the puppet server service should start automatically on puppet master server, however it can take upto 2-3 minutes to start.
 
 
 ## solutions:
+
+**1. Switch to  root user** 
 
 ```
 thor@jump_host ~$ sudo su -
 [sudo] password for thor: mjolnir123
 
 
-troot@jump_host ~# cd /etc/puppetlabs/code/environments/production/manifests
+root@jump_host ~# cd /etc/puppetlabs/code/environments/production/manifests
 root@jump_host /etc/puppetlabs/code/environments/production/manifests# ll
 total 0
 root@jump_host /etc/puppetlabs/code/environments/production/manifests# vi official.pp
@@ -68,9 +72,9 @@ steve@stapp02's password: Am3ric@
 We trust you have received the usual lecture from the local System
 Administrator. It usually boils down to these three things:
 
-    #1) Respect the privacy of others.
-    #2) Think before you type.
-    #3) With great power comes great responsibility.
+    #1 Respect the privacy of others.
+    #2 Think before you type.
+    #3 With great power comes great responsibility.
 
 [sudo] password for steve: Am3ric@
 
