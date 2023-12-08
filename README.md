@@ -25,9 +25,9 @@ Credentials required by the Server include a **User ID, Password, and Hostname (
 # Getting Started
 
 # Kodekloud Engineer Labs
-This repository contains all my notes for past Kodekloud Engineer tasks which are all performed in a live Linux environment. These tasks simulate actual enterprise challenges and  the day-to-day work of System Administrators and DevOps Engineers.
+This repository contains all my notes for past Kodekloud Engineer tasks. These tasks simulate actual enterprise challenges and  the day-to-day work of System Administrators and DevOps Engineers.
 
-For each task, The documentation for the servers is also provided. It is up to the "engineer" to find the solution for each problem. Solve the given time of the task.
+For each task, The documentation for the servers is also provided. Find the solution for each problem. Solve the given time of the task.
 
 
 
