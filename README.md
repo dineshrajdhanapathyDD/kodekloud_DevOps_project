@@ -102,11 +102,11 @@ For each task, The documentation for the servers is also provided. It is up to t
 
 👨‍💻 Lab 01 - [Install and Configure Nginx as an LBR]()  
 👨‍💻 Lab 02 - [LEMP Troubleshooting]()   
-✔️ Lab 03 -  [Install and Configure PostgreSQL](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%204/LINUX/3%20Install%20and%20Configure%20PostgreSQL.md)  
+✔️ Lab 03 - [Install and Configure PostgreSQL](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%204/LINUX/3%20Install%20and%20Configure%20PostgreSQL.md)  
 👨‍💻 Lab 04 - [Bash scripts if/else statements]()  
 👨‍💻 Lab 05 - [Configure LAMP server ]()   
-✔️ Lab 06 -  [Install and Configure DB Server](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%204/LINUX/6%20Install%20and%20Configure%20DB%20Server.md)  
-✔️ Lab 07 -  [Install and Configure Web Application](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%204/LINUX/7%20Install%20and%20Configure%20Web%20Application.md)  
+✔️ Lab 06 - [Install and Configure DB Server](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%204/LINUX/6%20Install%20and%20Configure%20DB%20Server.md)  
+✔️ Lab 07 - [Install and Configure Web Application](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%204/LINUX/7%20Install%20and%20Configure%20Web%20Application.md)  
 ✔️ Lab 08 - [Install and Configure PHP-FPM](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%204/LINUX/8%20Install%20and%20Configure%20PHP-FPM.md)  
 👨‍💻 Lab 09 - [Configure Nginx + PHP-FPM Using Unix Sock]()
 
@@ -116,19 +116,19 @@ For each task, The documentation for the servers is also provided. It is up to t
 
 **Level 1**
 
-✔️ Lab 01 -  [Git Install and Create Bare Repository]()  
-✔️ Lab 02 -  [Git Clone Repositories]()  
-✔️ Lab 03 -  [Git Fork a Repository]()  
-✔️ Lab 04 -  [Git Repository Update]()  
-✔️ Lab 05 -  [Git Delete Branches]()
+✔️ Lab 01 -  [Git Install and Create Bare Repository](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%201/Git/1%20Git%20Install%20and%20Create%20Bare%20Repository.md)  
+✔️ Lab 02 -  [Git Clone Repositories](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%201/Git/2%20Git%20Clone%20Repositories.md)  
+✔️ Lab 03 -  [Git Fork a Repository](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%201/Git/3%20Git%20Fork%20a%20Repository.md)  
+✔️ Lab 04 -  [Git Repository Update](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%201/Git/4%20Git%20Repository%20Update.md)  
+✔️ Lab 05 -  [Git Delete Branches](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%201/Git/5%20Git%20Delete%20Branches.md)
 
 **Level 2**
 
-✔️ Lab 01 -  [Git Install and Create Repository]()  
-✔️ Lab 02 -  [Git Create Branches]()  
-✔️ Lab 03 -  [Git Merge Branches]()  
-✔️ Lab 04 -  [Git Manage Remotes]()  
-✔️ Lab 05 -  [Git Revert Some Changes]()
+✔️ Lab 01 - [Git Install and Create Repository](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%202/Git/1%20Git%20Install%20and%20Create%20Repository.md)  
+✔️ Lab 02 - [Git Create Branches](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%202/Git/2%20Git%20Create%20Branches.md)  
+✔️ Lab 03 - [Git Merge Branches](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%202/Git/3%20Git%20Merge%20Branches.md)  
+✔️ Lab 04 - [Git Manage Remotes](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%202/Git/4%20Git%20Manage%20Remotes.md)  
+✔️ Lab 05 - [Git Revert Some Changes](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/blob/main/LEVEL%202/Git/5%20Git%20Revert%20Some%20Changes.md)
 
 **Level 3**
 
