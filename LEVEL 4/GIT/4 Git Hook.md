@@ -28,6 +28,7 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 Warning: Permanently added 'ststor01,172.16.238.15' (ECDSA) to the list of known hosts.
 natasha@ststor01's password: Bl@kW
 ```
+
 **2. git repository  `/opt/beta.git`  which is cloned under  `/usr/src/kodekloudrepos`  directory present on  `Storage server`  in  `Stratos DC`.**
 ```
 [natasha@ststor01 ~]$ cd /usr/src/kodekloudrepos/beta
@@ -35,6 +36,7 @@ natasha@ststor01's password: Bl@kW
 [natasha@ststor01 beta]$ ls
 feature.txt  info.txt
 ```
+
 **3. Checkout master**
 ```
 [natasha@ststor01 beta]$ sudo git checkout master
@@ -50,6 +52,7 @@ Administrator. It usually boils down to these three things:
 Switched to branch 'master'
 Your branch is up to date with 'origin/master'.
 ```
+
 **4. Merge the feature**
 ```
 [natasha@ststor01 beta]$ sudo git merge feature
@@ -59,11 +62,13 @@ Fast-forward
  1 file changed, 1 insertion(+)
  create mode 100644 feature.txt
  ```
+
  **5. Create the post-update with permission**
  ```
 [natasha@ststor01 beta]$ sudo touch /opt/beta.git/hooks/post-update
 [natasha@ststor01 beta]$ sudo chmod +x /opt/beta.git/hooks/post-update
 ```
+
 **6. Creates a release tag with name .** 
 ```
 [natasha@ststor01 beta]$ sudo vi /opt/beta.git/hooks/post-update
@@ -73,6 +78,7 @@ cd /opt/beta.git
 git_tag=release-$(date "+%Y-%m-%d")
 git tag $git_tag
 ```
+
 **7. Push to master**
 ```
 [natasha@ststor01 beta]$ sudo git push

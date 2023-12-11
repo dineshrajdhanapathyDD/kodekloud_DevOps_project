@@ -4,26 +4,26 @@
 
 Sarah and Max were working on writting some stories which they have pushed to the repository. Max has recently added some new changes and is trying to push them to the repository but he is facing some issues. Below you can find more details:
 
-SSH into (storage server) using user (max) and password (Max_pass123). Under (/home/max) you will find the (story-blog) repository. Try to push the changes to the origin repo and fix the issues. The (story-index.txt) must have titles for all 4 stories. Additionally, there is a typo in The (Lion and the Mooose) line where (Mooose) should be (Mouse).
+SSH into `storage server` using user `max` and password `Max_pass123`. Under `/home/max` you will find the `story-blog` repository. Try to push the changes to the origin repo and fix the issues. The `story-index.txt` must have titles for all 4 stories. Additionally, there is a typo in The `Lion and the Mooose` line where `Mooose` should be `Mouse`.
 
-Click on the (Gitea UI) button on the top bar. You should be able to access the (Gitea) page. You can login to (Gitea) server from UI using username (sarah) and password (Sarah_pass123) or username (max) and password (Max_pass123).
+Click on the `(Gitea UI)` button on the top bar. You should be able to access the `Gitea` page. You can login to `Gitea` server from UI using username `sarah` and password `Sarah_pass123` or username `max` and password `Max_pass123`.
 
-(Note): For these kind of scenarios requiring changes to be done in a web UI, please take screenshots so that you can share it with us for review in case your task is marked incomplete. You may also consider using a screen recording software such as loom.com to record and share your work.
+`Note`: For these kind of scenarios requiring changes to be done in a web UI, please take screenshots so that you can share it with us for review in case your task is marked incomplete. You may also consider using a screen recording software such as loom.com to record and share your work.
 
 
 ## Solution:  
 
-- Click on the (Gitea UI) button 
+- Click on the `Gitea UI` button 
 
-- Login to (Gitea) server from UI using username  (max) and password (Max_pass123).
+- Login to `Gitea` server from UI using username  `max` and password `Max_pass123`.
 
 ![sign in](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/assets/52989362/f43262f7-4244-438f-b0e8-008fcca1a2aa)
 
-- Able to see the project in the (Gitea) page
+- Able to see the project in the `Gitea` page
 
 ![project page](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/assets/52989362/c173dee1-ef73-4bc2-ab53-7f1b09db0164)
 
-- open the folder stroy-index.txt file 
+- open the folder `stroy-index.txt` file 
 
 ![4](https://github.com/dineshrajdhanapathyDD/kodekloud-Engineer_project/assets/52989362/087694fe-8784-46fb-a11e-c9f4836d822b)
 
