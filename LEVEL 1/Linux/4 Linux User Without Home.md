@@ -64,6 +64,6 @@ drwx------ 1 tony    tony    4096 Jan 25  2020 tony
 ```
 
 
-**5. Click on Finish & Confirm to complete the task successful.**
+**5. Click on `Finish` & `Confirm` to complete the task successful.**
 
 

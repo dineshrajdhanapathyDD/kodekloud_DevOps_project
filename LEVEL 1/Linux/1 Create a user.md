@@ -36,4 +36,4 @@ uid=1075(anita) gid=1075(anita) groups=1075(anita)
 anita:x:1075:1075::/var/www/anita:/bin/bash
 ```
 
-**4. Click on Finish & Confirm to complete the task successfully.**
+**4. Click on `Finish` & `Confirm` to complete the task successfully.**

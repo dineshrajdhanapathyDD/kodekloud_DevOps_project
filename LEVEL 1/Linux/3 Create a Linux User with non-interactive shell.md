@@ -41,6 +41,6 @@ yousuf:x:1002:1002::/home/yousuf:/sbin/nologin
 ```
 
 
-**5.  Click on Finish & Confirm to complete the task successful.**
+**5.  Click on `Finish` & `Confirm` to complete the task successful.**
 
 

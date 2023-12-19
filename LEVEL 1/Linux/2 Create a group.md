@@ -52,7 +52,7 @@ stark:x:1002:1003::/home/stark:/bin/bash
 `Please Note` :- I have showed only for stapp01. 
 You have to do this in all app server stapp01,stapp02, stapp03. 
 
-**6.Click on Finish & Confirm to complete the task successful**
+**6.Click on `Finish` & `Confirm` to complete the task successful**
 
 
 
