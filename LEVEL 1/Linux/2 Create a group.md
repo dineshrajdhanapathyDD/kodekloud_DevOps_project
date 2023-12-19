@@ -56,31 +56,6 @@ You have to do this in all app server stapp01,stapp02, stapp03.
 
 
 
-`Refer below credentials;`
-    
 
-```console
-Purpose -Application 1
-Server Name  -   stapp01
-IP  -  172.16.238.10
-Hostname   -   stapp01.stratos.xfusioncorp.com
-User  -  tony
-Password  -  Ir0nM@n
-
- 
-Purpose - Application 2
-Server Name  - stapp02
-IP  -   172.16.238.11
-Hostname   -    stapp02.stratos.xfusioncorp.com
-User  -steve
-Password  -  Am3ric@
- 
-Purpose -  Application 3
-Server Name  - stapp03
-IP  -   172.16.238.12
-Hostname   -    stapp03.stratos.xfusioncorp.com
-User  - banner
-Password  -    BigGr33n
-```
 
 

@@ -100,19 +100,4 @@ total 4
 
 
 
-when i was working face error:
-1.If yaml file not correct shown below error:
 
-
-ERROR! We were unable to read either as JSON nor YAML, these are the errors we got from each:
-JSON: No JSON object could be decoded
-
-Syntax Error while loading YAML.
-  mapping values are not allowed in this context
-
-The error appears to be in '/home/thor/ansible/playbook.yml': line 7, column 7, but may
-be elsewhere in the file depending on the exact syntax problem. 
-
-
-2. application servers at location /opt/dba not correct :
-ls: cannot access '/opt/': No such file or directorynon-zero return code

@@ -8,7 +8,7 @@ The Nautilus DevOps team has recently setup a Jenkins server, which they want to
 Click on the Jenkins button on the top bar to access the Jenkins UI. Login using username `admin` and `Adm!n321` password.
 
 
-1. Once logged in, install `Git` and `GitLab` plugins. You might need to restart Jenkins service to install these plugins, so we recommend clicking on (Restart Jenkins when installation is complete and no jobs are running) on plugin installation/update page i.e `update centre`.
+ Once logged in, install `Git` and `GitLab` plugins. You might need to restart Jenkins service to install these plugins, so we recommend clicking on (Restart Jenkins when installation is complete and no jobs are running) on plugin installation/update page i.e `update centre`.
 
 Note:
 

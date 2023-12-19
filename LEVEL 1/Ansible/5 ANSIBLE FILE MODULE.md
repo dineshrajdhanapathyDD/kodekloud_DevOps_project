@@ -104,23 +104,3 @@ stapp02 | CHANGED | rc=0 >>
 ```
 
 **7. Click on `Finish` & `Confirm` to complete the task successful**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

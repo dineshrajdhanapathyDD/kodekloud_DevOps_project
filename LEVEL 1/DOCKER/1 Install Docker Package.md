@@ -96,10 +96,3 @@ docker-compose version 1.28.6, build 5db8d86f
 ```
 
 **10.  Click on `Finish` & `Confirm` to complete the task successful**
-
-
-
-
-
-
-
